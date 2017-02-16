@@ -1,0 +1,36 @@
+{
+  "name": "whiteboard",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon --harmony index.js",
+    "prod": "node --harmony index.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "babel-cli": "^6.23.0",
+    "babel-core": "^6.23.1",
+    "babel-plugin-syntax-object-rest-spread": "^6.13.0",
+    "babel-plugin-transform-es2015-destructuring": "^6.23.0",
+    "babel-plugin-transform-es2015-modules-commonjs": "^6.23.0",
+    "babel-plugin-transform-object-rest-spread": "^6.23.0",
+    "bluebird": "^3.4.7",
+    "koa": "^2.0.0",
+    "koa-better-body": "^3.0.2",
+    "koa-router": "^7.0.1"
+  },
+  "babel": {
+    "plugins": [
+      "syntax-object-rest-spread",
+      "transform-es2015-modules-commonjs",
+      "transform-object-rest-spread",
+      "transform-es2015-destructuring"
+    ]
+  },
+  "devDependencies": {
+    "nodemon": "^1.11.0"
+  }
+}
