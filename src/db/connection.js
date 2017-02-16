@@ -1,4 +1,4 @@
-import knex from 'knex';
+import knex from 'knex'
 import path from 'path'
 
 import ensureFolderExist from '../utils/ensure-folder-exist'
@@ -10,4 +10,4 @@ if (dbConfig.client === 'sqlite3') {
   ensureFolderExist(path.dirname(dbConfig.connection.filename))
 }
 
-export default knex(dbConfig);
+export default knex(dbConfig)

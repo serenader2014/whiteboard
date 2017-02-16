@@ -1,17 +1,17 @@
-const str = 'string';
-// const num = 'number';
-const int = 'integer';
-const text = 'text';
-// const float = 'float';
-const increments = 'increments';
-const bool = 'boolean';
-// const date = 'date';
-const dateTime = 'dateTime';
-// const time = 'time';
-// const timestamp = 'timestamp';
+const str = 'string'
+// const num = 'number'
+const int = 'integer'
+const text = 'text'
+// const float = 'float'
+const increments = 'increments'
+const bool = 'boolean'
+// const date = 'date'
+const dateTime = 'dateTime'
+// const time = 'time'
+// const timestamp = 'timestamp'
 
 export default {
-  user: {
+  users: {
     id: { type: increments, nullable: false, primary: true },
     username: { type: str, maxlength: 150, nullable: false },
     slug: { type: str, maxlength: 150, nullable: false, unique: true },
@@ -31,7 +31,7 @@ export default {
     updated_at: { type: dateTime, nullable: true },
     updated_by: { type: int, nullable: true },
   },
-  role: {
+  roles: {
     id: { type: increments, nullable: false, primary: true },
     name: { type: str, maxlength: 50, nullable: false, unique: true },
     description: { type: str, maxlength: 200, nullable: true },
@@ -40,12 +40,12 @@ export default {
     updated_at: { type: dateTime, nullable: true },
     updated_by: { type: int, nullable: true },
   },
-  role_user: {
+  roles_users: {
     id: { type: increments, nullable: false, primary: true },
     role_id: { type: int, nullable: false },
     user_id: { type: int, nullable: false }
   },
-  permission: {
+  permissions: {
     id: { type: increments, nullable: false, primary: true },
     name: { type: str, maxlength: 150, nullable: false, unique: true },
     object_type: { type: str, maxlength: 150, nullable: false },
@@ -55,12 +55,12 @@ export default {
     updated_at: { type: dateTime, nullable: true },
     updated_by: { type: int, nullable: true },
   },
-  permission_role: {
+  permissions_roles: {
     id: { type: increments, nullable: false, primary: true },
     role_id: { type: int, nullable: false },
     permission_id: { type: int, nullable: false }
   },
-  setting: {
+  settings: {
     id: { type: increments, nullable: false, primary: true },
     key: { type: str, maxlength: 150, nullable: false, unique: true },
     value: { type: text, maxlength: 65535, nullable: true },
@@ -70,4 +70,4 @@ export default {
     updated_at: { type: dateTime, nullable: true },
     updated_by: { type: int, nullable: true },
   }
-};
+}
