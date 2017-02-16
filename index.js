@@ -1,4 +1,5 @@
 global.Promise = require('bluebird')
 global.fs = global.Promise.promisifyAll(require('fs'))
 require('babel-core/register')
+require('dotenv').config()
 require('./src/index').default()
