@@ -3,10 +3,10 @@ import path from 'path'
 const baseDir = path.resolve(__dirname, '../..')
 const absolutePathReg = new RegExp(`^${baseDir}`)
 
-async function createFolderIfNotExist(dir) {
+async function createFolderIfNotExist (dir) {
   const absoluteDir = path.join(baseDir, dir)
   try {
-    await fs.mkdirAsync(dir)
+    await fs.mkdirAsync(absoluteDir)
   } catch (e) {
     if (e.code !== 'EEXIST') {
       throw e
@@ -15,7 +15,7 @@ async function createFolderIfNotExist(dir) {
 }
 
 // dir is a relative/absolute path
-export default function(dir) {
+export default function (dir) {
   const relativePath = dir.replace(absolutePathReg, '')
   const segment = relativePath.split(path.sep)
 

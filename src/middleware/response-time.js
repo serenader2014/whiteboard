@@ -1,5 +1,5 @@
-export default function responseTime() {
-  return async function middleware(ctx, next) {
+export default function responseTime () {
+  return async function middleware (ctx, next) {
     const start = new Date().getTime()
     await next()
     const time = new Date().getTime() - start

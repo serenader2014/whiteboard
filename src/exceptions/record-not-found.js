@@ -1,15 +1,15 @@
 import Exception from './base'
 
-export default class RecordNotFound extends Exception {
-  constructor(message = 'Record not found') {
+export class RecordNotFound extends Exception {
+  constructor (message = 'Record not found') {
     super(message)
   }
 
-  get name() {
+  get name () {
     return 'RecordNotFoundError'
   }
 
-  get status() {
+  get status () {
     return 404
   }
 }

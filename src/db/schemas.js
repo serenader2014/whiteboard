@@ -4,7 +4,6 @@ const int = 'integer'
 const text = 'text'
 // const float = 'float'
 const increments = 'increments'
-const bool = 'boolean'
 // const date = 'date'
 const dateTime = 'dateTime'
 // const time = 'time'
@@ -29,7 +28,7 @@ export default {
     created_at: { type: dateTime, nullable: false },
     created_by: { type: int, nullable: false },
     updated_at: { type: dateTime, nullable: true },
-    updated_by: { type: int, nullable: true },
+    updated_by: { type: int, nullable: true }
   },
   roles: {
     id: { type: increments, nullable: false, primary: true },
@@ -38,7 +37,7 @@ export default {
     created_at: { type: dateTime, nullable: false },
     created_by: { type: int, nullable: false },
     updated_at: { type: dateTime, nullable: true },
-    updated_by: { type: int, nullable: true },
+    updated_by: { type: int, nullable: true }
   },
   roles_users: {
     id: { type: increments, nullable: false, primary: true },
@@ -53,7 +52,7 @@ export default {
     created_at: { type: dateTime, nullable: false },
     created_by: { type: int, nullable: false },
     updated_at: { type: dateTime, nullable: true },
-    updated_by: { type: int, nullable: true },
+    updated_by: { type: int, nullable: true }
   },
   permissions_roles: {
     id: { type: increments, nullable: false, primary: true },
@@ -68,6 +67,6 @@ export default {
     created_at: { type: dateTime, nullable: false },
     created_by: { type: int, nullable: false },
     updated_at: { type: dateTime, nullable: true },
-    updated_by: { type: int, nullable: true },
+    updated_by: { type: int, nullable: true }
   }
 }

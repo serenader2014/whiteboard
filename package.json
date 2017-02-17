@@ -6,7 +6,9 @@
   "scripts": {
     "start": "nodemon --harmony index.js",
     "prod": "node --harmony index.js",
-    "env": "cp sample.env .env"
+    "env": "cp sample.env .env",
+    "test": "npm run lint && NODE_ENV=test mocha --harmony --compilers js:babel-core/register",
+    "lint": "eslint --fix src/** test/**"
   },
   "keywords": [],
   "author": "",
@@ -45,6 +47,14 @@
     ]
   },
   "devDependencies": {
-    "nodemon": "^1.11.0"
+    "babel-eslint": "^7.1.1",
+    "chai": "^3.5.0",
+    "eslint": "^3.15.0",
+    "eslint-config-standard": "^6.2.1",
+    "eslint-plugin-promise": "^3.4.2",
+    "eslint-plugin-standard": "^2.0.1",
+    "mocha": "^3.2.0",
+    "nodemon": "^1.11.0",
+    "supertest": "^3.0.0"
   }
 }

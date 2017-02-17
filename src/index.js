@@ -12,15 +12,22 @@ import routes from './routes'
 
 import dbInit from './db/init'
 
-export default async function() {
+import { DBError } from './exceptions'
+
+export default async function () {
   await dbInit()
+
+  const store = redisStore({ url: process.env.REDIS_URL })
+  store.on('error', e => {
+    throw new DBError('Connect to redis error')
+  })
 
   const app = new Koa()
   app.keys = [process.env.SESSION_KEY]
 
   app.use(logger())
   app.use(session({
-    store: redisStore({ url: process.env.REDIS_URL })
+    store: store
   }))
 
   app.use(catcher())

@@ -2,12 +2,12 @@ import bookshelf from '../db/bookshelf'
 
 import Permission from './permissions'
 
-export default class Role extends bookshelf.Model {
-    get tableName() {
-        return 'roles';
-    }
+export class Role extends bookshelf.Model {
+  get tableName () {
+    return 'roles'
+  }
 
-    permissions() {
-        return this.belongsTo(Permission, 'permission_id')
-    }
+  permissions () {
+    return this.belongsTo(Permission, 'permission_id')
+  }
 }
