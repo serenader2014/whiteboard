@@ -14,7 +14,7 @@ import dbInit from './db/init'
 
 import { DBError } from './exceptions'
 
-export default async function () {
+export default async function() {
   await dbInit()
 
   const store = redisStore({ url: process.env.REDIS_URL })

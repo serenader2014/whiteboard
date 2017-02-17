@@ -19,7 +19,7 @@ const blogBookshelf = bookshelf(knex)
 blogBookshelf.plugin('pagination')
 
 blogBookshelf.Model = class Model extends blogBookshelf.Model {
-  constructor (...args) {
+  constructor(...args) {
     super(...args)
 
     eventList.forEach(event => {

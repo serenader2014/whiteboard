@@ -1,6 +1,6 @@
 import knex from './connection'
 
-export default function createTable (tableName, schema) {
+export default function createTable(tableName, schema) {
   return knex.schema.createTableIfNotExists(tableName, table => {
     Object.keys(schema).forEach(key => {
       let column

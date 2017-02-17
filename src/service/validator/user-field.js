@@ -3,12 +3,12 @@ import User from '../../model/users'
 import RecordAlreadyExist from '../../exceptions/record-already-exist'
 
 export default class UserField {
-  constructor (payload, checkEmailIsExist = false) {
+  constructor(payload, checkEmailIsExist = false) {
     this.payload = payload
     this.checkEmailIsExist = checkEmailIsExist
   }
 
-  execute () {
+  execute() {
     const emailRule = ['required', 'email']
     const passwordRule = ['minLength:6', 'maxLength:20', 'required']
     const usernameRule = ['maxLength:20']

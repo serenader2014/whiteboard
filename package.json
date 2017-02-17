@@ -7,7 +7,7 @@
     "start": "nodemon --harmony index.js",
     "prod": "node --harmony index.js",
     "env": "cp sample.env .env",
-    "test": "npm run lint && NODE_ENV=test mocha --harmony --compilers js:babel-core/register",
+    "test": "NODE_ENV=test mocha --harmony --compilers js:babel-core/register test/index.js",
     "lint": "eslint --fix src/** test/**"
   },
   "keywords": [],

@@ -1,15 +1,15 @@
 import Exception from './base'
 
 export class DBError extends Exception {
-  constructor (message = 'DB encounter an error') {
+  constructor(message = 'DB encounter an error') {
     super(message)
   }
 
-  get name () {
+  get name() {
     return 'DBError'
   }
 
-  get status () {
+  get status() {
     return 502
   }
 }

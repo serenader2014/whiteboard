@@ -1,7 +1,7 @@
 import glob from 'glob'
 import Router from 'koa-router'
 
-export default function routes (app) {
+export default function routes(app) {
   glob(`${__dirname}/*`, { ignore: '**/index.js' }, (err, matches) => {
     if (err) throw err
 
