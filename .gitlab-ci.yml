@@ -1,18 +1,17 @@
 image: node:7.4.0
+services:
+  - redis
+
+before_script:
+  - npm install
 
 stages:
-- install_dependencies
 - lint
 - test
 
 cache:
   paths:
   - node_modules/
-
-install_dependencies:
-  stage: install_dependencies
-  script:
-    - npm i
 
 lint:
   stage: lint
@@ -22,4 +21,4 @@ lint:
 test:
   stage: test
   script:
-  - npm test
+  - REDIS_URL=redis://redis:6379 npm run test
