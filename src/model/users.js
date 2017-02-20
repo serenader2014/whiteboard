@@ -1,5 +1,4 @@
 import bcrypt from 'bcrypt-nodejs'
-import _ from 'lodash'
 
 import { Slug } from './slug'
 
@@ -15,6 +14,16 @@ export class User extends bookshelf.Model {
     return 'users'
   }
 
+  static get defaultFields() {
+    return {
+      status: 'active',
+      language: 'zh',
+      created_at: new Date(),
+      created_by: 0,
+      username: fields => fields.username || fields.email
+    }
+  }
+
   static checkIfExist(obj) {
     return this.forge()
     .query(queryBuilder => {
@@ -25,37 +34,19 @@ export class User extends bookshelf.Model {
     .fetch()
   }
 
-  static query(queryObject, options) {
-    return this.forge()
-    .query('where', queryObject)
-    .fetch(options)
-  }
-
   static async generatePassword(password) {
     const salt = await crypt.genSaltAsync(8)
     return crypt.hashAsync(password, salt, null)
   }
 
-  static async create(options) {
-    const defaultOption = {
-      status: 'active',
-      language: 'zh',
-      created_at: new Date(),
-      created_by: 0
-    }
-    const user = _.extend({}, defaultOption, options)
-    user.username = user.username || user.email
-    user.slug = await userSlug.digest(user.username)
-
-    return this.forge(user).save()
-  }
-
-  async onCreating(model, attrs, options) {
+  async onSaving(model, attrs, options) {
     const { email, password, username } = model.attributes
 
     await new UserField({ email, password, username }, true).execute()
     const hashedPassword = await User.generatePassword(password)
+    const slug = await userSlug.digest(username)
     model.set('password', hashedPassword)
+    model.set('slug', slug)
   }
 
   roles() {
@@ -71,4 +62,3 @@ export class User extends bookshelf.Model {
     return this.save()
   }
 }
-

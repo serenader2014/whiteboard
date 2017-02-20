@@ -1,0 +1,7 @@
+[{
+  "name": "admin",
+  "description": "Admin user"
+},{
+  "name": "guest",
+  "description": "Guest user"
+}]

@@ -1,0 +1,17 @@
+[{
+  "name": "admin create post",
+  "object_type": "post",
+  "action_type": "create"
+},{
+  "name": "admin update post",
+  "object_type": "post",
+  "action_type": "update"
+},{
+  "name": "admin delete post",
+  "object_type": "post",
+  "action_type": "delete",
+},{
+  "name": "admin read post",
+  "object_type": "post",
+  "action_type": "read"
+}]

@@ -15,7 +15,11 @@ export default function catcher() {
       } else {
         console.error('catch an error:')
         console.trace(e)
-        ctx.body = e.message || e
+        ctx.status = e.status || 500
+        ctx.body = {
+          message: e.message || e,
+          errorType: 'Internal server error'
+        }
       }
     }
   }

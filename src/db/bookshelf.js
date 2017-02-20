@@ -1,4 +1,6 @@
 import bookshelf from 'bookshelf'
+import _ from 'lodash'
+
 import knex from './connection'
 
 const eventList = [
@@ -29,6 +31,33 @@ blogBookshelf.Model = class Model extends blogBookshelf.Model {
         this.on(event, this[functionName])
       }
     })
+  }
+
+  static query(queryObject, options) {
+    return this.forge()
+    .query('where', queryObject)
+    .fetch(options)
+  }
+
+  static async create(customFields) {
+    const fields = _.extend({}, this.defaultFields, customFields)
+    const plainObject = {}
+
+    Object.keys(fields).forEach(key => {
+      if (!_.isFunction(fields[key])) {
+        plainObject[key] = fields[key]
+      }
+    })
+
+    const result = _.mapValues(fields, val => {
+      if (typeof val === 'function') {
+        return val(plainObject)
+      } else {
+        return val
+      }
+    })
+
+    return this.forge(result).save()
   }
 }
 
