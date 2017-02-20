@@ -1,0 +1,8 @@
+{
+  "admin": {
+    "post": ["read", "create", "update", "delete"]
+  },
+  "guest": {
+    "post": ["read"]
+  }
+}

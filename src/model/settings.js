@@ -5,13 +5,10 @@ export class Setting extends bookshelf.Model {
     return 'settings'
   }
 
-  static query(queryObject, options) {
-    return this.forge()
-    .query('where', queryObject)
-    .fetch(options)
-  }
-
-  static create(options) {
-    return this.forge(options).save()
+  static get defaultFields() {
+    return {
+      created_by: 0,
+      created_at: new Date()
+    }
   }
 }

@@ -39,7 +39,7 @@ blogBookshelf.Model = class Model extends blogBookshelf.Model {
     .fetch(options)
   }
 
-  static async create(customFields) {
+  static create(customFields) {
     const fields = _.extend({}, this.defaultFields, customFields)
     const plainObject = {}
 

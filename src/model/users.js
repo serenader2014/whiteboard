@@ -3,8 +3,9 @@ import bcrypt from 'bcrypt-nodejs'
 import { Slug } from './slug'
 
 import bookshelf from '../db/bookshelf'
-import { Role } from './roles'
+import { Role, Setting } from './index'
 import UserField from '../service/validator/user-field'
+import { DBError } from '../exceptions'
 
 const crypt = Promise.promisifyAll(bcrypt)
 const userSlug = new Slug('user')
@@ -39,6 +40,16 @@ export class User extends bookshelf.Model {
     return crypt.hashAsync(password, salt, null)
   }
 
+  async onCreated(model, attrs, options) {
+    const setting = await Setting.query({ key: 'default_role' })
+    if (!setting) throw new DBError('Setting is incomplete, no default role record')
+
+    const defaultRole = setting.get('value')
+    const role = await Role.query({ name: defaultRole })
+    if (!role) throw new DBError('No default role record found')
+    await model.roles().attach(role)
+  }
+
   async onSaving(model, attrs, options) {
     const { email, password, username } = model.attributes
 
@@ -50,7 +61,7 @@ export class User extends bookshelf.Model {
   }
 
   roles() {
-    return this.belongsTo(Role, 'role_id')
+    return this.belongsToMany(Role)
   }
 
   validatePassword(password) {

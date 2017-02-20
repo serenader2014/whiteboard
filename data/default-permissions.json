@@ -1,17 +1,17 @@
 [{
-  "name": "admin create post",
+  "name": "create post permission",
   "object_type": "post",
   "action_type": "create"
 },{
-  "name": "admin update post",
+  "name": "update post permission",
   "object_type": "post",
   "action_type": "update"
 },{
-  "name": "admin delete post",
+  "name": "delete post permission",
   "object_type": "post",
-  "action_type": "delete",
+  "action_type": "delete"
 },{
-  "name": "admin read post",
+  "name": "read post permission",
   "object_type": "post",
   "action_type": "read"
 }]
