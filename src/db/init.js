@@ -1,3 +1,4 @@
+import knex from './connection'
 import createTable from './create-table'
 import schemas from './schemas'
 import { Setting, Role, Permission } from '../model'
@@ -10,10 +11,9 @@ import permissionControl from '../../data/default-role-permission'
 
 export default async function() {
   for (let model of Object.keys(schemas)) {
-    try {
+    const isTableExist = await knex.schema.hasTable(model)
+    if (!isTableExist) {
       await createTable(model, schemas[model])
-    } catch (e) {
-      console.log(e)
     }
   }
 
@@ -30,14 +30,16 @@ export default async function() {
     for (let role of defaultRoles) {
       const newRole = await Role.create(role)
       const grantedPermissions = permissionControl[newRole.get('name')]
+
       for (let i of Object.keys(grantedPermissions)) {
         const permissionList = grantedPermissions[i]
+
         for (let action of permissionList) {
           const targetPermission = await Permission.query({ object_type: i, action_type: action })
           if (!targetPermission) {
             throw new DBError(`Target permission not found: object_type: ${i}, action_type: ${action}`)
           }
-          newRole.permissions().attach(targetPermission)
+          await newRole.permissions().attach(targetPermission)
         }
       }
     }
