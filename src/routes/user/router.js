@@ -1,6 +1,6 @@
 import { createUser } from './controller'
 
-export const baseUrl = '/user'
+export const baseUrl = '/users'
 
 export default {
   '/': [{

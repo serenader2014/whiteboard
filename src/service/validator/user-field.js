@@ -1,6 +1,6 @@
 import Checkit from 'checkit'
-import User from '../../model/users'
-import RecordAlreadyExist from '../../exceptions/record-already-exist'
+import { User } from '../../model'
+import { RecordAlreadyExist } from '../../exceptions'
 
 export default class UserField {
   constructor(payload, checkEmailIsExist = false) {
@@ -19,8 +19,6 @@ export default class UserField {
         if (targetUser) throw new RecordAlreadyExist(`email already exist: ${email}`)
       })
     }
-
-    console.log(this.payload)
 
     const rules = new Checkit({
       email: emailRule,

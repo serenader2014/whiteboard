@@ -15,7 +15,7 @@ async function createFolderIfNotExist(dir) {
 }
 
 // dir is a relative/absolute path
-export default function(dir) {
+export default async function(dir) {
   const relativePath = dir.replace(absolutePathReg, '')
   const segment = relativePath.split(path.sep)
 
@@ -25,7 +25,7 @@ export default function(dir) {
     return arr
   }, [])
 
-  return nestedDirList.reduce((promise, item) => {
-    return promise.then(() => createFolderIfNotExist(item))
-  }, Promise.resolve())
+  for (let i of nestedDirList) {
+    await createFolderIfNotExist(i)
+  }
 }
