@@ -5,10 +5,10 @@ import glob from 'glob'
 import { setUpEnv, setUpDB } from './utils'
 
 should()
+setUpEnv()
 
 describe('Whiteboard server api test', () => {
   before(async () => {
-    setUpEnv()
     await setUpDB()
     await require('../src/index').default()
   })
