@@ -1,4 +1,4 @@
-export const baseUrl = '/auth'
+export const baseUrl = '/api/v1/auth'
 
 export default {
   '/': [{

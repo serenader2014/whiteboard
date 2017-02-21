@@ -3,10 +3,9 @@ import bodyParser from 'koa-better-body'
 import session from 'koa-generic-session'
 import redisStore from 'koa-redis'
 import passport from 'koa-passport'
-import logger from 'koa-bunyan-logger'
+import bunyanLogger from 'koa-bunyan-logger'
 
-import catcher from './middleware/catcher'
-import responseTime from './middleware/response-time'
+import { catcher, responseTime, logger } from './middleware'
 
 import routes from './routes'
 
@@ -25,6 +24,7 @@ export default async function() {
   const app = new Koa()
   app.keys = [process.env.SESSION_KEY]
 
+  app.use(bunyanLogger())
   app.use(logger())
   app.use(session({
     store: store

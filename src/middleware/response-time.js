@@ -1,4 +1,4 @@
-export default function responseTime() {
+export function responseTime() {
   return async function middleware(ctx, next) {
     const start = new Date().getTime()
     await next()

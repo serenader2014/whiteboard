@@ -1,6 +1,6 @@
 import Checkit from 'checkit'
 
-export default function catcher() {
+export function catcher() {
   return async function middleware(ctx, next) {
     try {
       await next()
