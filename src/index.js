@@ -1,4 +1,5 @@
 import Koa from 'koa'
+import convert from 'koa-convert'
 import bodyParser from 'koa-better-body'
 import session from 'koa-generic-session'
 import redisStore from 'koa-redis'
@@ -23,13 +24,13 @@ export default async function() {
   const app = new Koa()
   app.keys = [process.env.SESSION_KEY]
 
-  app.use(bunyanLogger())
+  app.use(convert(bunyanLogger()))
   app.use(logger())
-  app.use(session({ store: store }))
+  app.use(convert(session({ store: store })))
 
   app.use(catcher())
   app.use(responseTime())
-  app.use(bodyParser({ fields: 'body' }))
+  app.use(convert(bodyParser({ fields: 'body' })))
 
   app.use(passport.initialize())
   app.use(passport.session())

@@ -46,6 +46,7 @@ describe('User api test', () => {
         .send(userInfo)
         .end((err, res) => {
           if (err) return reject(err)
+          res.body.bio.should.equal(userInfo.bio)
           resolve()
         })
     })
