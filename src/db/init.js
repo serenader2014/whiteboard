@@ -2,11 +2,9 @@ import knex from './connection'
 import createTable from './create-table'
 import schemas from './schemas'
 import { Setting, Role, Permission } from '../model'
-import { DBError } from '../exceptions'
 
 import defaultSettings from '../../data/default-settings'
 import defaultRoles from '../../data/default-roles'
-import defaultPermissions from '../../data/default-permissions'
 import permissionControl from '../../data/default-role-permission'
 
 export default async function() {
@@ -14,14 +12,6 @@ export default async function() {
     const isTableExist = await knex.schema.hasTable(model)
     if (!isTableExist) {
       await createTable(model, schemas[model])
-    }
-  }
-
-  const permissions = await Permission.query({})
-
-  if (!permissions) {
-    for (let permission of defaultPermissions) {
-      await Permission.create(permission)
     }
   }
 
@@ -35,11 +25,22 @@ export default async function() {
         const permissionList = grantedPermissions[i]
 
         for (let action of permissionList) {
-          const targetPermission = await Permission.query({ object_type: i, action_type: action })
-          if (!targetPermission) {
-            throw new DBError(`Target permission not found: object_type: ${i}, action_type: ${action}`)
+          const permissionObject = { object_type: i }
+          if (typeof action === 'string') {
+            permissionObject.action_type = action
+          } else if (action.name) {
+            permissionObject.action_type = action.name
+            permissionObject.condition = action.condition
           }
-          await newRole.permissions().attach(targetPermission)
+          let permission = await Permission.query(permissionObject)
+          if (!permission) {
+            permissionObject.name = `${permissionObject.action_type}_${permissionObject.object_type}`
+            if (permissionObject.condition) {
+              permissionObject.name = `${permissionObject.name}_when_${permissionObject.condition}`
+            }
+            permission = await Permission.create(permissionObject)
+          }
+          await newRole.permissions().attach(permission)
         }
       }
     }

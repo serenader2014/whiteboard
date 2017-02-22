@@ -5,6 +5,8 @@ import knex from './connection'
 
 import resourceStructure from '../../data/resource-structure.json'
 
+import { RecordNotFound } from '../exceptions'
+
 const expressionReg = /^(.+)(<|=|>)(.+)$/
 const userPropertyReg = /^user\.(\w+)/
 const resourcePropertyReg = /^resource\.(\w+)/
@@ -46,7 +48,7 @@ blogBookshelf.Model = class Model extends blogBookshelf.Model {
     .fetch(options)
   }
 
-  static create(customFields) {
+  static create(customFields, executor) {
     const fields = _.extend({}, this.defaultFields, customFields)
     const plainObject = {}
 
@@ -65,6 +67,14 @@ blogBookshelf.Model = class Model extends blogBookshelf.Model {
     })
 
     return this.forge(result).save()
+  }
+
+  static async update(id, fields, executor) {
+    const target = await this.query({ id })
+    if (!target) throw new RecordNotFound(`Can not find target resource: id:${id}`)
+    const finalFields = _.pick(_.extend({}, this.defaultFields, target.attributes, fields), this.availableFields)
+
+    return target.save(finalFields)
   }
 
   structure(currentUser) {

@@ -1,5 +1,6 @@
 import { User } from '../../model'
-import { RecordNotFound } from '../../exceptions'
+import { RecordNotFound, OperationNotPermitted } from '../../exceptions'
+import { canThis } from '../../service/permission'
 
 export async function createUser(ctx, next) {
   const { email, password } = ctx.request.body
@@ -15,4 +16,18 @@ export async function getUserInfo(ctx) {
 
 export function getSelfInfo(ctx) {
   ctx.body = ctx.state.user.structure(ctx.state.user)
+}
+
+export async function updateUserInfo(ctx) {
+  const requester = ctx.state.user || 'guest'
+  const { id } = ctx.params
+  const targetResource = await User.query({ id })
+  if (!targetResource) throw new RecordNotFound(`Can not find target user: user ID: ${id}`)
+
+  const isOperationPermitted = await canThis(requester, 'update', targetResource)
+
+  if (!isOperationPermitted) throw new OperationNotPermitted('You dont have permission to operate this task')
+
+  const user = await User.update(id, ctx.request.body)
+  ctx.body = user.structure(ctx.state.user)
 }

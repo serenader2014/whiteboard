@@ -2,6 +2,9 @@
   "name": "admin",
   "description": "Admin user"
 },{
+  "name": "user",
+  "description": "Common user"
+},{
   "name": "guest",
   "description": "Guest user"
 }]

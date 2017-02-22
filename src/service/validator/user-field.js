@@ -3,9 +3,10 @@ import { User } from '../../model'
 import { RecordAlreadyExist } from '../../exceptions'
 
 export default class UserField {
-  constructor(payload, checkEmailIsExist = false) {
+  constructor(payload, checkEmailIsExist = false, omitPassword = false) {
     this.payload = payload
     this.checkEmailIsExist = checkEmailIsExist
+    this.omitPassword = omitPassword
   }
 
   execute() {
@@ -20,13 +21,18 @@ export default class UserField {
       })
     }
 
-    const rules = new Checkit({
+    const rules = {
       email: emailRule,
-      password: passwordRule,
       username: usernameRule
-    })
+    }
 
-    return rules.run(this.payload)
+    if (!this.omitPassword) {
+      rules.password = passwordRule
+    }
+
+    const check = new Checkit(rules)
+
+    return check.run(this.payload)
   }
 }
 

@@ -49,6 +49,7 @@ export default {
     name: { type: str, maxlength: 150, nullable: false, unique: true },
     object_type: { type: str, maxlength: 150, nullable: false },
     action_type: { type: str, maxlength: 150, nullable: false },
+    condition: { type: str, maxlength: 150, nullable: true },
     created_at: { type: dateTime, nullable: false },
     created_by: { type: int, nullable: false },
     updated_at: { type: dateTime, nullable: true },

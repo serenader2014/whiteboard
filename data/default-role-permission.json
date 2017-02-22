@@ -1,6 +1,13 @@
 {
   "admin": {
-    "post": ["read", "create", "update", "delete"]
+    "post": ["read", "create", "update", "delete"],
+    "user": ["read", "create", "update", "delete"]
+  },
+  "user": {
+    "user": [{
+      "name": "update",
+      "condition": "requester.id=resource.id"
+    }]
   },
   "guest": {
     "post": ["read"]

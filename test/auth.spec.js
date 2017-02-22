@@ -1,12 +1,11 @@
 import supertest from 'supertest'
 
+import { generateUserInfo } from './utils'
+
 const baseUrl = `http://localhost:${process.env.APP_PORT}`
 
 describe('Auth', () => {
-  const userInfo = {
-    email: 'newemail@test.com',
-    password: 'helloworld'
-  }
+  const userInfo = generateUserInfo()
   it('should create a new user', done => {
     supertest(baseUrl)
       .post('/api/v1/users')

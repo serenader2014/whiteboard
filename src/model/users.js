@@ -15,6 +15,10 @@ export class User extends bookshelf.Model {
     return 'users'
   }
 
+  get resourceName() {
+    return 'user'
+  }
+
   static get defaultFields() {
     return {
       status: 'active',
@@ -23,6 +27,23 @@ export class User extends bookshelf.Model {
       created_by: 0,
       username: fields => fields.username || fields.email
     }
+  }
+
+  static get availableFields() {
+    return [
+      'username',
+      'password',
+      'email',
+      'image',
+      'cover',
+      'bio',
+      'website',
+      'location',
+      'status',
+      'language',
+      'tour',
+      'last_login'
+    ]
   }
 
   static checkIfExist(obj) {
@@ -50,14 +71,45 @@ export class User extends bookshelf.Model {
     await model.roles().attach(role)
   }
 
-  async onSaving(model, attrs, options) {
+  async onUpdating(model, attrs, options) {
+    const { email, password, username } = model.attributes
+
+    if (model.hasChanged(['email', 'username', 'password'])) {
+      await new UserField({ email, password, username }, model.hasChanged('email'), !model.hasChanged('password'))
+    }
+
+    if (model.hasChanged('password')) {
+      const hashedPassword = await User.generatePassword(password)
+      model.set('password', hashedPassword)
+    }
+
+    if (model.hasChanged('username')) {
+      const slug = await userSlug.digest(username)
+      model.set('slug', slug)
+    }
+  }
+
+  async onCreating(model, attrs, options) {
     const { email, password, username } = model.attributes
 
     await new UserField({ email, password, username }, true).execute()
     const hashedPassword = await User.generatePassword(password)
     const slug = await userSlug.digest(username)
+    
     model.set('password', hashedPassword)
     model.set('slug', slug)
+  }
+
+  async permissions() {
+    const completeModel = await this.load(['roles'])
+    const roles = await completeModel.roles().fetch({ withRelated: 'permissions' })
+    let permissions = []
+
+    roles.each(role => {
+      permissions = [...permissions, ...role.toJSON().permissions]
+    })
+
+    return permissions
   }
 
   roles() {
