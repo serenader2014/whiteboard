@@ -1,7 +1,8 @@
 {
   "admin": {
     "post": ["read", "create", "update", "delete"],
-    "user": ["read", "create", "update", "delete"]
+    "user": ["read", "create", "update", "delete"],
+    "setting": ["read", "create", "update", "delete"]
   },
   "user": {
     "user": [{

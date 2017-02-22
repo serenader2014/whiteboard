@@ -5,6 +5,18 @@ export class Setting extends bookshelf.Model {
     return 'settings'
   }
 
+  get resourceName() {
+    return 'setting'
+  }
+
+  static get availableFields() {
+    return [
+      'type',
+      'key',
+      'value'
+    ]
+  }
+
   static get defaultFields() {
     return {
       created_by: 0,

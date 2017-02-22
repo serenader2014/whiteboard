@@ -95,7 +95,7 @@ export class User extends bookshelf.Model {
     await new UserField({ email, password, username }, true).execute()
     const hashedPassword = await User.generatePassword(password)
     const slug = await userSlug.digest(username)
-    
+
     model.set('password', hashedPassword)
     model.set('slug', slug)
   }
