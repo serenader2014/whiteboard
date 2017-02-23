@@ -14,7 +14,7 @@ describe('setting api test', () => {
       .end((err, res) => {
         if (err) throw err
         res.status.should.equal(200)
-        settings = res.body
+        settings = res.body[0]
         done()
       })
   })

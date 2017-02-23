@@ -7,11 +7,6 @@ import resourceStructure from '../../data/resource-structure.json'
 
 import { RecordNotFound } from '../exceptions'
 
-const expressionReg = /^(.+)(<|=|>)(.+)$/
-const userPropertyReg = /^user\.(\w+)/
-const resourcePropertyReg = /^resource\.(\w+)/
-const stringReg = /^('|")(\w+)('|")$/
-
 const eventList = [
   'counting',
   'created',
@@ -42,7 +37,7 @@ blogBookshelf.Model = class Model extends blogBookshelf.Model {
     })
   }
 
-  static query(queryObject, options) {
+  static query(queryObject = {}, options) {
     return this.forge()
     .query('where', queryObject)
     .fetch(options)
@@ -111,6 +106,26 @@ blogBookshelf.Model = class Model extends blogBookshelf.Model {
       result[key] = allowed ? actualData : null
     })
     return result
+  }
+}
+
+blogBookshelf.Collection = class Collection extends blogBookshelf.Collection {
+  constructor(...args) {
+    super(...args)
+
+    eventList.forEach(event => {
+      const functionName = 'on' + event.substring(0, 1).toUpperCase() + event.substring(1)
+
+      if (this[functionName]) {
+        this.on(event, this[functionName])
+      }
+    })
+  }
+
+  static query(queryObject = {}, options) {
+    return this.forge()
+    .query('where', queryObject)
+    .fetch(options)
   }
 }
 

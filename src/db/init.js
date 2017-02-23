@@ -1,7 +1,7 @@
 import knex from './connection'
 import createTable from './create-table'
 import schemas from './schemas'
-import { Setting, Role, Permission } from '../model'
+import { Setting, Settings, Role, Roles, Permission } from '../model'
 
 import defaultSettings from '../../data/default-settings'
 import defaultRoles from '../../data/default-roles'
@@ -15,8 +15,8 @@ export default async function() {
     }
   }
 
-  const roles = await Role.query({})
-  if (!roles) {
+  const roles = await Roles.query()
+  if (!roles.length) {
     for (let role of defaultRoles) {
       const newRole = await Role.create(role)
       const grantedPermissions = permissionControl[newRole.get('name')]
@@ -46,8 +46,8 @@ export default async function() {
     }
   }
 
-  const settings = await Setting.query({})
-  if (!settings) {
+  const settings = await Settings.query()
+  if (!settings.length) {
     for (let setting of defaultSettings) {
       await Setting.create(setting)
     }

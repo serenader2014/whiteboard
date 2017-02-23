@@ -17,3 +17,9 @@ export class Permission extends bookshelf.Model {
     return this.belongsToMany(Role)
   }
 }
+
+export class Permissions extends bookshelf.Collection {
+  get model() {
+    return Permission
+  }
+}

@@ -1,9 +1,9 @@
-import { Setting } from '../../model'
+import { Setting, Settings } from '../../model'
 import { canThis } from '../../service/permission'
 import { OperationNotPermitted } from '../../exceptions'
 
 export async function listSetting(ctx) {
-  const settings = await Setting.query({})
+  const settings = await Settings.query()
   ctx.body = settings.toJSON()
 }
 

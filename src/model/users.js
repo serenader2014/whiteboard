@@ -125,3 +125,9 @@ export class User extends bookshelf.Model {
     return this.save()
   }
 }
+
+export class Users extends bookshelf.Collection {
+  get model() {
+    return User
+  }
+}

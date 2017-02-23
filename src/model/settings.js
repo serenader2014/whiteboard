@@ -24,3 +24,9 @@ export class Setting extends bookshelf.Model {
     }
   }
 }
+
+export class Settings extends bookshelf.Collection {
+  get model() {
+    return Setting
+  }
+}
