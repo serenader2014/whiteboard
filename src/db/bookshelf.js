@@ -77,7 +77,7 @@ blogBookshelf.Model = class Model extends blogBookshelf.Model {
     return target.save(finalFields)
   }
 
-  structure(currentUser) {
+  json(isPermitted) {
     const tableName = this.tableName
     const structure = resourceStructure[tableName]
     const result = {}
@@ -94,61 +94,10 @@ blogBookshelf.Model = class Model extends blogBookshelf.Model {
       for (const i of accessControl) {
         if (i === 'public') {
           allowed = true
-          break
         }
 
-        const expressionMatchResult = i.match(expressionReg)
-        if (!expressionMatchResult) {
-          continue
-        }
-
-        const left = expressionMatchResult[1]
-        const condition = expressionMatchResult[2]
-        const right = expressionMatchResult[3]
-        let leftExpression
-        let rightExpression
-
-        const leftUserMatchResult = left.match(userPropertyReg)
-        const leftResourceMatchResult = left.match(resourcePropertyReg)
-        const rightUserMatchResult = right.match(userPropertyReg)
-        const rightResourceMatchResult = right.match(resourcePropertyReg)
-        const rightStringMatchResult = right.match(stringReg)
-
-        if (leftUserMatchResult) {
-          leftExpression = currentUser ? currentUser[leftUserMatchResult[1]] : null
-        }
-
-        if (leftResourceMatchResult) {
-          leftExpression = this[leftResourceMatchResult[1]]
-        }
-
-        if (rightUserMatchResult) {
-          rightExpression = currentUser ? currentUser[rightUserMatchResult[1]] : null
-        }
-
-        if (rightResourceMatchResult) {
-          rightExpression = this[rightResourceMatchResult[1]]
-        }
-
-        if (rightStringMatchResult) {
-          rightExpression = rightStringMatchResult[2]
-        }
-
-        switch (condition) {
-          case '<': {
-            allowed = leftExpression < rightExpression
-            break
-          }
-          case '>': {
-            allowed = leftExpression > rightExpression
-            break
-          }
-          case '=':
-          default: {
-            /* eslint-disable eqeqeq */
-            allowed = leftExpression == rightExpression
-            break
-          }
+        if (i === 'protected' && isPermitted) {
+          allowed = true
         }
 
         if (allowed) {
@@ -157,7 +106,7 @@ blogBookshelf.Model = class Model extends blogBookshelf.Model {
       }
 
       const actualData = isRelatedData
-        ? this.related(key).structure(currentUser)
+        ? this.related(key).json()
         : this.attributes[key]
       result[key] = allowed ? actualData : null
     })

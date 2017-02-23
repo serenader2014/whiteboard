@@ -6,7 +6,7 @@ export function login(ctx, next) {
   return passport.authenticate('local', async (user, info, status) => {
     if (!user) throw new BadPassword(info.message)
     await ctx.login(user)
-    ctx.body = user.structure(user)
+    ctx.body = user.json(true)
   })(ctx, next)
 }
 

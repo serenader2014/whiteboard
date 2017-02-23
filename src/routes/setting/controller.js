@@ -14,5 +14,5 @@ export async function updateSetting(ctx) {
   const isOperationPermitted = await canThis(requester, 'update', targetSetting)
   if (!isOperationPermitted) throw new OperationNotPermitted()
   const newSetting = await Setting.update(id, ctx.request.body)
-  ctx.body = newSetting.structure(ctx.state.user)
+  ctx.body = newSetting.json(await canThis(requester, 'read', targetSetting))
 }

@@ -2,25 +2,29 @@
     "users": {
         "bio": { "access": ["public"] },
         "cover": { "access": ["public"] },
-        "created_at": { "access": ["user.id=resource.id", "user.role='admin'"] },
-        "created_by": { "access": ["user.role='admin'"] },
+        "created_at": { "access": ["protected"] },
+        "created_by": { "access": ["protected"] },
         "id": { "access": ["public"] },
         "image": { "access": ["public"] },
         "language": { "access": ["public"] },
-        "last_login": { "access": ["user.id=resource.id", "user.role='admin'"] },
+        "last_login": { "access": ["protected"] },
         "location": { "access": ["public"] },
         "username": { "access": ["public"] },
         "email": { "access": ["public"] },
         "slug": { "access": ["public"] },
-        "status": { "access": ["user.id=resource.id", "user.role='admin'"] },
-        "updated_at": { "access": ["user.role='admin'"] },
-        "updated_by": { "access": ["user.role='admin'"] },
+        "status": { "access": ["protected"] },
+        "updated_at": { "access": ["protected"] },
+        "updated_by": { "access": ["protected"] },
         "website": { "access": ["public"] }
     },
     "settings": {
-        "type": { "access": ["public"] },
-        "key": { "access": ["public"] },
-        "value": { "access": ["public"] },
-        "id": { "access": ["public"] }
+        "type": { "access": ["protected"] },
+        "key": { "access": ["protected"] },
+        "value": { "access": ["protected"] },
+        "id": { "access": ["protected"] },
+        "created_at": { "access": ["protected"] },
+        "created_by": { "access": ["protected"] },
+        "updated_at": { "access": ["protected"] },
+        "updated_by": { "access": ["protected"] }
     }
 }
