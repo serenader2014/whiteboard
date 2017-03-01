@@ -6,7 +6,7 @@ import redisStore from 'koa-redis'
 import passport from 'koa-passport'
 import bunyanLogger from 'koa-bunyan-logger'
 
-import { catcher, responseTime, logger } from './middleware'
+import { catcher, responseTime, logger, api } from './middleware'
 import routes from './routes'
 import dbInit from './db/init'
 import setUpPassport from './service/passport'
@@ -35,6 +35,7 @@ export default async function() {
   app.use(passport.initialize())
   app.use(passport.session())
 
+  app.use(api())
   routes(app)
 
   app.listen(process.env.APP_PORT, () => console.log(`Server started on ${process.env.APP_PORT}`))

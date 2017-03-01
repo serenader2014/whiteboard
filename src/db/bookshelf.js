@@ -61,13 +61,20 @@ blogBookshelf.Model = class Model extends blogBookshelf.Model {
       }
     })
 
+    if (executor) {
+      result.created_by = executor.id
+    }
+
     return this.forge(result).save()
   }
 
-  static async update(id, fields, executor) {
-    const target = await this.query({ id })
-    if (!target) throw new RecordNotFound(`Can not find target resource: id:${id}`)
-    const finalFields = _.pick(_.extend({}, this.defaultFields, target.attributes, fields), this.availableFields)
+  static async update(target, fields, executor) {
+    const finalFields = _.extend({}, this.defaultFields, target.attributes, fields)
+
+    finalFields.updated_at = new Date()
+    if (executor) {
+      finalFields.updated_by = executor.id
+    }
 
     return target.save(finalFields)
   }

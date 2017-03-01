@@ -2,6 +2,8 @@
   "admin": {
     "post": ["read", "create", "update", "delete"],
     "user": ["read", "create", "update", "delete"],
+    "user.status": ["update"],
+    "user.roles": ["read", "update"],
     "setting": ["read", "create", "update", "delete"]
   },
   "user": {
@@ -9,6 +11,14 @@
       "name": "update",
       "condition": "requester.id=resource.id"
     }, {
+      "name": "read",
+      "condition": "requester.id=resource.id"
+    }],
+    "user.status": [{
+      "name": "read",
+      "condition": "requester.id=resource.id"
+    }],
+    "user.roles": [{
       "name": "read",
       "condition": "requester.id=resource.id"
     }]

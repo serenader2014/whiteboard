@@ -13,6 +13,11 @@ export default class UserField {
     const emailRule = ['required', 'email']
     const passwordRule = ['minLength:6', 'maxLength:20', 'required']
     const usernameRule = ['maxLength:20']
+    const statusRule = [val => {
+      if (['active', 'inactive', 'deleted'].indexOf(val) === -1) {
+        throw new Error(`Invalid status type: ${val}`)
+      }
+    }]
 
     if (this.checkEmailIsExist) {
       emailRule.push(async email => {
@@ -23,7 +28,8 @@ export default class UserField {
 
     const rules = {
       email: emailRule,
-      username: usernameRule
+      username: usernameRule,
+      status: statusRule
     }
 
     if (!this.omitPassword) {

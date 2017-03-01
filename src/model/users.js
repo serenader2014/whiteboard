@@ -15,10 +15,6 @@ export class User extends bookshelf.Model {
     return 'users'
   }
 
-  get resourceName() {
-    return 'user'
-  }
-
   static get defaultFields() {
     return {
       status: 'active',
@@ -27,23 +23,6 @@ export class User extends bookshelf.Model {
       created_by: 0,
       username: fields => fields.username || fields.email
     }
-  }
-
-  static get availableFields() {
-    return [
-      'username',
-      'password',
-      'email',
-      'image',
-      'cover',
-      'bio',
-      'website',
-      'location',
-      'status',
-      'language',
-      'tour',
-      'last_login'
-    ]
   }
 
   static checkIfExist(obj) {
@@ -72,10 +51,10 @@ export class User extends bookshelf.Model {
   }
 
   async onUpdating(model, attrs, options) {
-    const { email, password, username } = model.attributes
+    const { password, username } = model.attributes
 
     if (model.hasChanged(['email', 'username', 'password'])) {
-      await new UserField({ email, password, username }, model.hasChanged('email'), !model.hasChanged('password'))
+      await new UserField(model.attributes, model.hasChanged('email'), !model.hasChanged('password'))
     }
 
     if (model.hasChanged('password')) {
@@ -90,9 +69,9 @@ export class User extends bookshelf.Model {
   }
 
   async onCreating(model, attrs, options) {
-    const { email, password, username } = model.attributes
+    const { password, username } = model.attributes
 
-    await new UserField({ email, password, username }, true).execute()
+    await new UserField(model.attributes, true).execute()
     const hashedPassword = await User.generatePassword(password)
     const slug = await userSlug.digest(username)
 

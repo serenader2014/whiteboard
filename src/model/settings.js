@@ -1,12 +1,9 @@
 import bookshelf from '../db/bookshelf'
+import SettingField from '../service/validator/setting-field'
 
 export class Setting extends bookshelf.Model {
   get tableName() {
     return 'settings'
-  }
-
-  get resourceName() {
-    return 'setting'
   }
 
   static get availableFields() {
@@ -22,6 +19,11 @@ export class Setting extends bookshelf.Model {
       created_by: 0,
       created_at: new Date()
     }
+  }
+
+  async onSaving(model, attrs, options) {
+    const { type, value, key } = model.attributes
+    await new SettingField({ type, value, key }).execute()
   }
 }
 

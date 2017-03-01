@@ -13,6 +13,6 @@ export async function updateSetting(ctx) {
   const requester = ctx.state.user || 'guest'
   const isOperationPermitted = await canThis(requester, 'update', 'setting', targetSetting)
   if (!isOperationPermitted) throw new OperationNotPermitted()
-  const newSetting = await Setting.update(id, ctx.request.body)
+  const newSetting = await Setting.update(targetSetting, ctx.request.body)
   ctx.body = newSetting.json(await canThis(requester, 'read', 'setting', targetSetting))
 }
