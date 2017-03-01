@@ -1,12 +1,12 @@
 import { createUser, getUserInfo, getSelfInfo, updateUserInfo } from './controller'
-import { requireUnauthenticated, requireAuthenticated } from '../../middleware'
+import { requireAuthenticated } from '../../middleware'
 
 export const baseUrl = '/api/v1/users'
 
 export default {
   '/': [{
     method: 'POST',
-    handlers: [requireUnauthenticated(), createUser]
+    handlers: [requireAuthenticated(), createUser]
   }],
   '/self': [{
     method: 'GET',

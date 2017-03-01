@@ -6,7 +6,7 @@ const requesterPropertyReg = /^requester\.(\w+)/
 const resourcePropertyReg = /^resource\.(\w+)/
 const stringReg = /^('|")(\w+)('|")$/
 
-export async function canThis(requester, action, resource) {
+export async function canThis(requester, actionType, objectType, resource) {
   let permissions = []
   if (requester === 'guest') {
     const Guest = await Role.query({ name: 'guest' })
@@ -19,7 +19,7 @@ export async function canThis(requester, action, resource) {
   let result = false
 
   for (let permission of permissions) {
-    if (permission.object_type === resource.resourceName && permission.action_type === action) {
+    if (permission.object_type === objectType && permission.action_type === actionType) {
       if (permission.condition) {
         // requester.id=resource.id
         const matchResult = permission.condition.match(expressionReg)

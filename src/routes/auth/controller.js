@@ -1,4 +1,5 @@
 import passport from 'koa-passport'
+import { User } from '../../model'
 
 import { BadPassword } from '../../exceptions'
 
@@ -15,4 +16,10 @@ export function logout(ctx) {
   ctx.body = {
     message: 'ok'
   }
+}
+
+export async function register(ctx) {
+  const { email, password } = ctx.request.body
+  const newUser = await User.create({ email, password })
+  ctx.body = newUser.json(true)
 }

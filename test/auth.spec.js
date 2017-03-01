@@ -8,7 +8,7 @@ describe('Auth', () => {
   const userInfo = generateUserInfo()
   it('should create a new user', done => {
     supertest(baseUrl)
-      .post('/api/v1/users')
+      .post('/api/v1/register')
       .send(userInfo)
       .expect(200, done)
   })

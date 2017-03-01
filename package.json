@@ -4,10 +4,10 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon --harmony index.js | ./node_modules/.bin/bunyan -o short",
-    "prod": "node --harmony index.js | ./node_modules/.bin/bunyan -o short",
+    "start": "nodemon index.js | ./node_modules/.bin/bunyan -o short",
+    "prod": "node index.js | ./node_modules/.bin/bunyan -o short",
     "env": "cp sample.env .env",
-    "test": "NODE_ENV=test mocha --harmony --compilers js:babel-core/register test/index.js",
+    "test": "NODE_ENV=test mocha --compilers js:babel-core/register test/index.js",
     "lint": "eslint --fix src/** test/**"
   },
   "keywords": [],

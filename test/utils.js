@@ -58,7 +58,7 @@ export function createUser() {
   return new Promise((resolve, reject) => {
     const user = generateUserInfo()
     supertest(`http://localhost:${process.env.APP_PORT}`)
-      .post('/api/v1/users')
+      .post('/api/v1/register')
       .send(user)
       .end((err, res) => {
         if (err) return reject(err)

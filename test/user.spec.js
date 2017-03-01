@@ -8,28 +8,28 @@ describe('User api test', () => {
   const user = generateUserInfo()
   it('try to create a new user', done => {
     supertest(baseUrl)
-      .post('/api/v1/users')
+      .post('/api/v1/register')
       .send(user)
       .expect(200, done)
   })
 
   it('try to create duplicate user', done => {
     supertest(baseUrl)
-      .post('/api/v1/users')
+      .post('/api/v1/register')
       .send(user)
       .expect(422, done)
   })
 
   it('try to use an invalid email to create user', done => {
     supertest(baseUrl)
-      .post('/api/v1/users')
+      .post('/api/v1/register')
       .send({ email: 'invalidemail', password: 'he!loworld@' })
       .expect(422, done)
   })
 
   it('try to use a short password to create user', done => {
     supertest(baseUrl)
-      .post('/api/v1/users')
+      .post('/api/v1/register')
       .send({ email: 'test1@test.com', password: '123' })
       .expect(422, done)
   })

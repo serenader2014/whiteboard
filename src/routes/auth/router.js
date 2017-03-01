@@ -1,4 +1,4 @@
-import { login, logout } from './controller'
+import { login, logout, register } from './controller'
 import { requireUnauthenticated, requireAuthenticated } from '../../middleware'
 export const baseUrl = '/api/v1'
 
@@ -10,5 +10,9 @@ export default {
   '/logout': [{
     method: 'GET',
     handlers: [requireAuthenticated(), logout]
+  }],
+  '/register': [{
+    method: 'POST',
+    handlers: [requireUnauthenticated(), register]
   }]
 }
