@@ -1,4 +1,4 @@
-image: node:7.4.0
+image: node:7.7.0
 services:
   - redis
 
