@@ -58,9 +58,10 @@ export async function changeUserRole(requester, id, roles) {
   const isOperationPermitted = await canThis(requester, 'update', 'user.roles', targetResource)
   if (!isOperationPermitted) throw new OperationNotPermitted(`You dont have permission to update user roles`)
 
-  const targetRoles = await Roles.forge().whereIn(roles).fetch()
+  const targetRoles = await Roles.query(qb => qb.whereIn('id', roles))
 
-  await targetResource.roles().attach(targetRoles)
+  await targetResource.roles().attach(targetRoles.models)
+  return targetResource
 }
 
 export async function deleteUser(requester, id) {
@@ -78,6 +79,15 @@ export async function getUserInfo(requester, id) {
   const isOperationPermitted = await canThis(requester, 'read', 'user', targetResource)
 
   return targetResource.json(isOperationPermitted)
+}
+
+export async function getUserRoles(requester, id) {
+  const targetResource = await User.query({ id })
+  if (!targetResource) throw new RecordNotFound(`Can not found target user: ID: ${id}`)
+  const isOperationPermitted = await canThis(requester, 'read', 'user.roles', targetResource)
+  if (!isOperationPermitted) throw new OperationNotPermitted(`You dont have permission to read user roles`)
+
+  return targetResource.roles().fetch()
 }
 
 export async function listUser() {

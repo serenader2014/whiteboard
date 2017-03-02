@@ -12,7 +12,7 @@ export async function canThis(requester, actionType, objectType, resource) {
     const Guest = await Role.query({ name: 'guest' })
     if (!Guest) throw new DBError('No guest role exist')
 
-    permissions = (await Guest.permissions().fetch({ withRelated: 'permissions' })).toJSON()
+    permissions = (await Guest.permissions().fetch()).toJSON()
   } else {
     permissions = await requester.permissions()
   }

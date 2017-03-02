@@ -1,4 +1,5 @@
 import supertest from 'supertest'
+import { expect } from 'chai'
 
 import { generateUserInfo, createUser, login } from './utils'
 
@@ -47,6 +48,74 @@ describe('User api test', () => {
         .end((err, res) => {
           if (err) return reject(err)
           res.body.bio.should.equal(userInfo.bio)
+          resolve()
+        })
+    })
+  })
+
+  it('admin try to update other user info', async () => {
+    const { response } = await createUser()
+    const { agent } = await login(global.admin)
+    const newUserInfo = {
+      bio: 'bio updated by admin'
+    }
+
+    return new Promise((resolve, reject) => {
+      agent
+        .put(`/api/v1/users/${response.id}`)
+        .send(newUserInfo)
+        .end((err, res) => {
+          if (err) return reject(err)
+          res.body.bio.should.equal(newUserInfo.bio)
+          resolve()
+        })
+    })
+  })
+
+  it('common user try to update other user info', async () => {
+    const { response } = await createUser()
+    const { agent } = await login(global.user)
+    const newUserInfo = {
+      bio: 'bio updated by user'
+    }
+
+    return new Promise((resolve, reject) => {
+      agent
+        .put(`/api/v1/users/${response.id}`)
+        .send(newUserInfo)
+        .end((err, res) => {
+          if (err) return reject(err)
+          res.status.should.equal(403)
+          resolve()
+        })
+    })
+  })
+
+  it('admin get user info', async () => {
+    const { response } = await createUser()
+    const { agent } = await login(global.admin)
+
+    return new Promise((resolve, reject) => {
+      agent
+        .get(`/api/v1/users/${response.id}`)
+        .end((err, res) => {
+          if (err) return reject(err)
+          res.body.status.should.not.equal(null)
+          resolve()
+        })
+    })
+  })
+
+  it('common user get other user info', async () => {
+    const { response } = await createUser()
+    const { agent } = await login(global.user)
+
+    return new Promise((resolve, reject) => {
+      agent
+        .get(`/api/v1/users/${response.id}`)
+        .end((err, res) => {
+          if (err) return reject(err)
+          expect(res.body.status).to.equal(null)
           resolve()
         })
     })

@@ -80,3 +80,31 @@ export function login(user) {
       })
   })
 }
+
+export async function insertInitialData() {
+  const User = require('../src/model/users').User
+  const Role = require('../src/model/roles').Role
+  const adminInfo = {
+    email: 'admin@test.com',
+    password: 'helloworld',
+    username: 'admin',
+    created_at: new Date(),
+    created_by: 0
+  }
+  const userInfo = {
+    email: 'user@test.com',
+    password: 'helloworld',
+    username: 'user',
+    created_at: new Date(),
+    created_by: 0
+  }
+  await new User(adminInfo).save()
+  const user = await new User(userInfo).save()
+
+  const roles = await user.roles().fetch()
+  await user.roles().detach(roles.models)
+  const userRole = await Role.query({ name: 'user' })
+  await user.roles().attach(userRole)
+  global.admin = adminInfo
+  global.user = userInfo
+}

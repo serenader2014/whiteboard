@@ -2,7 +2,7 @@ import supertest from 'supertest'
 import { should } from 'chai'
 import glob from 'glob'
 
-import { setUpEnv, setUpDB } from './utils'
+import { setUpEnv, setUpDB, insertInitialData } from './utils'
 
 should()
 setUpEnv()
@@ -11,6 +11,7 @@ describe('Whiteboard server api test', () => {
   before(async () => {
     await setUpDB()
     await require('../src/index').default()
+    await insertInitialData()
   })
 
   describe('check if server is running or not', () => {
