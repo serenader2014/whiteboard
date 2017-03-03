@@ -22,7 +22,7 @@ export default function setUpPassport() {
     passwordField: 'password'
   }, async (email, password, done) => {
     try {
-      const targetUser = await User.query({ email })
+      const targetUser = await User.getActiveUser({ email })
       if (!targetUser) return done(null, false, { message: 'User not found' })
       const isPasswordCorrect = await targetUser.validatePassword(password)
       if (!isPasswordCorrect) return done(null, false, { message: 'Password incorrect' })

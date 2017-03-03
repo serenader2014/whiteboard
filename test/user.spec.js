@@ -122,7 +122,9 @@ describe('User api test', () => {
   })
 
   it('admin try to delete user', async () => {
-    const { response } = await createUser()
+    const { user, response } = await createUser()
+    user.id = response.id
+    global.deletedUser = user
     const { agent } = await login(global.admin)
 
     return new Promise((resolve, reject) => {
@@ -140,5 +142,16 @@ describe('User api test', () => {
             })
         })
     })
+  })
+
+  it('deleted user can not login', done => {
+    supertest(baseUrl)
+      .post('/api/v1/login')
+      .send(global.deletedUser)
+      .end((err, res) => {
+        if (err) throw err
+        res.status.should.equal(404)
+        done()
+      })
   })
 })
