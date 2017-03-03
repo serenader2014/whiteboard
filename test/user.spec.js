@@ -120,4 +120,25 @@ describe('User api test', () => {
         })
     })
   })
+
+  it('admin try to delete user', async () => {
+    const { response } = await createUser()
+    const { agent } = await login(global.admin)
+
+    return new Promise((resolve, reject) => {
+      agent
+        .delete(`/api/v1/users/${response.id}`)
+        .end((err, res) => {
+          if (err) return reject(err)
+          res.status.should.equal(200)
+          agent
+            .get(`/api/v1/users/${response.id}`)
+            .end((err, r) => {
+              if (err) return reject(err)
+              r.status.should.equal(404)
+              resolve()
+            })
+        })
+    })
+  })
 })

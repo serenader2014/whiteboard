@@ -24,8 +24,7 @@ export async function createUser(requester, object) {
 }
 
 export async function updateUserInfo(requester, id, object) {
-  const targetResource = await User.query({ id })
-  if (!targetResource) throw new RecordNotFound(`Can not found target user: ID: ${id}`)
+  const targetResource = await User.getActiveUser({ id })
   const isOperationPermitted = await canThis(requester, 'update', 'user', targetResource)
   if (!isOperationPermitted) throw new OperationNotPermitted(`You dont have permission to update user(${id}) info`)
   const allowedFields = [
@@ -44,8 +43,7 @@ export async function updateUserInfo(requester, id, object) {
 }
 
 export async function updateUserStatus(requester, id, status) {
-  const targetResource = await User.query({ id })
-  if (!targetResource) throw new RecordNotFound(`Can not found target user: ID: ${id}`)
+  const targetResource = await User.getActiveUser({ id })
   const isOperationPermitted = await canThis(requester, 'update', 'user.status', targetResource)
   if (!isOperationPermitted) throw new OperationNotPermitted(`You dont have permission to update user status`)
 
@@ -53,8 +51,7 @@ export async function updateUserStatus(requester, id, status) {
 }
 
 export async function changeUserRole(requester, id, roles) {
-  const targetResource = await User.query({ id })
-  if (!targetResource) throw new RecordNotFound(`Can not found target user: ID: ${id}`)
+  const targetResource = await User.getActiveUser({ id })
   const isOperationPermitted = await canThis(requester, 'update', 'user.roles', targetResource)
   if (!isOperationPermitted) throw new OperationNotPermitted(`You dont have permission to update user roles`)
 
@@ -65,8 +62,7 @@ export async function changeUserRole(requester, id, roles) {
 }
 
 export async function deleteUser(requester, id) {
-  const targetResource = await User.query({ id })
-  if (!targetResource) throw new RecordNotFound(`Can not found target user: ID: ${id}`)
+  const targetResource = await User.getActiveUser({ id })
   const isOperationPermitted = await canThis(requester, 'delete', 'user', targetResource)
   if (!isOperationPermitted) throw new OperationNotPermitted(`You dont have permission to delete user`)
 
@@ -74,16 +70,14 @@ export async function deleteUser(requester, id) {
 }
 
 export async function getUserInfo(requester, id) {
-  const targetResource = await User.query({ id })
-  if (!targetResource) throw new RecordNotFound(`Can not found target user: ID: ${id}`)
+  const targetResource = await User.getActiveUser({ id })
   const isOperationPermitted = await canThis(requester, 'read', 'user', targetResource)
 
   return targetResource.json(isOperationPermitted)
 }
 
 export async function getUserRoles(requester, id) {
-  const targetResource = await User.query({ id })
-  if (!targetResource) throw new RecordNotFound(`Can not found target user: ID: ${id}`)
+  const targetResource = await User.getActiveUser({ id })
   const isOperationPermitted = await canThis(requester, 'read', 'user.roles', targetResource)
   if (!isOperationPermitted) throw new OperationNotPermitted(`You dont have permission to read user roles`)
 

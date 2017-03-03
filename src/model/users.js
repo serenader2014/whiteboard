@@ -5,7 +5,7 @@ import { Slug } from './slug'
 import bookshelf from '../db/bookshelf'
 import { Role, Setting } from './index'
 import UserField from '../service/validator/user-field'
-import { DBError } from '../exceptions'
+import { DBError, RecordNotFound } from '../exceptions'
 
 const crypt = Promise.promisifyAll(bcrypt)
 const userSlug = new Slug('user')
@@ -33,6 +33,20 @@ export class User extends bookshelf.Model {
       .orWhere('username', obj.username || '')
     })
     .fetch()
+  }
+
+  static async getActiveUser(queryObject) {
+    const user = await this.query(queryObject)
+
+    if (!user || user.get('status') === 'deleted') {
+      throw new RecordNotFound('Can not find target user')
+    }
+
+    if (user.status === 'inactive') {
+      throw new RecordNotFound('User is in inactive status')
+    }
+
+    return user
   }
 
   static async generatePassword(password) {
