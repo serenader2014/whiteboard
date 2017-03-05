@@ -26,10 +26,15 @@ export async function deleteUser(ctx) {
   ctx.body = { status: 'ok' }
 }
 
-export async function updateUserStatus(ctx) {
+export async function deactivateUser(ctx) {
   const { id } = ctx.params
-  const { status } = ctx.request.body
-  const user = await ctx.api.updateUserStatus(id, status)
+  const user = await ctx.api.updateUserStatus(id, 'inactive')
+  ctx.body = user.json(true)
+}
+
+export async function activateUser(ctx) {
+  const { id } = ctx.params
+  const user = await ctx.api.updateUserStatus(id, 'active')
   ctx.body = user.json(true)
 }
 

@@ -66,9 +66,8 @@ export class User extends bookshelf.Model {
 
   async onUpdating(model, attrs, options) {
     const { password, username } = model.attributes
-
-    if (model.hasChanged(['email', 'username', 'password'])) {
-      await new UserField(model.attributes, model.hasChanged('email'), !model.hasChanged('password'))
+    if (model.hasChanged(['email', 'username', 'password', 'status'])) {
+      await new UserField(model.attributes, model.hasChanged('email'), !model.hasChanged('password')).execute()
     }
 
     if (model.hasChanged('password')) {

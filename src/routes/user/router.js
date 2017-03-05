@@ -4,7 +4,8 @@ import {
   getSelfInfo,
   updateUserInfo,
   deleteUser,
-  updateUserStatus,
+  deactivateUser,
+  activateUser,
   updateUserRoles,
   changePassword,
   getUserRoles
@@ -32,9 +33,13 @@ export default {
     method: 'DELETE',
     handlers: [requireAuthenticated(), deleteUser]
   }],
-  '/:id/status': [{
-    method: 'PUT',
-    handlers: [requireAuthenticated(), updateUserStatus]
+  '/:id/deactivate': [{
+    method: 'POST',
+    handlers: [requireAuthenticated(), deactivateUser]
+  }],
+  '/:id/activate': [{
+    method: 'POST',
+    handlers: [requireAuthenticated(), activateUser]
   }],
   '/:id/roles': [{
     method: 'GET',

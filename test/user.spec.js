@@ -154,4 +154,19 @@ describe('User api test', () => {
         done()
       })
   })
+
+  it('admin deactivate user', async () => {
+    const { response } = await createUser()
+    const { agent } = await login(global.admin)
+
+    return new Promise((resolve, reject) => {
+      agent
+        .post(`/api/v1/users/${response.id}/deactivate`)
+        .end((err, res) => {
+          if (err) return reject(err)
+          res.status.should.equal(200)
+          resolve()
+        })
+    })
+  })
 })

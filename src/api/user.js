@@ -1,7 +1,7 @@
 import _ from 'lodash'
 
 import { User, Users, Roles } from '../model'
-import { OperationNotPermitted, RecordNotFound } from '../exceptions'
+import { OperationNotPermitted } from '../exceptions'
 import { canThis } from '../service/permission'
 
 export async function createUser(requester, object) {

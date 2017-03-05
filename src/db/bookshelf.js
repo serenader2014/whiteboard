@@ -5,8 +5,6 @@ import knex from './connection'
 
 import resourceStructure from '../../data/resource-structure.json'
 
-import { RecordNotFound } from '../exceptions'
-
 const eventList = [
   'counting',
   'created',
@@ -77,6 +75,18 @@ blogBookshelf.Model = class Model extends blogBookshelf.Model {
     }
 
     return target.save(finalFields)
+  }
+
+  // fix bookshelf hasChanged method
+  hasChanged(attr) {
+    if (attr == null) return !_.isEmpty(this.changed)
+    if (typeof attr === 'string') return _.has(this.changed, attr)
+    let result = false
+    for (const i of attr) {
+      result = _.has(this.changed, i)
+      if (result) break
+    }
+    return result
   }
 
   json(isPermitted) {
