@@ -43,7 +43,7 @@ export async function updateUserInfo(requester, id, object) {
 }
 
 export async function updateUserStatus(requester, id, status) {
-  const targetResource = await User.getActiveUser({ id })
+  const targetResource = await User.query({ id })
   const isOperationPermitted = await canThis(requester, 'update', 'user.status', targetResource)
   if (!isOperationPermitted) throw new OperationNotPermitted(`You dont have permission to update user status`)
 

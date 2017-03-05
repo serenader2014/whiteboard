@@ -156,8 +156,11 @@ describe('User api test', () => {
   })
 
   it('admin deactivate user', async () => {
-    const { response } = await createUser()
+    const { response, user } = await createUser()
     const { agent } = await login(global.admin)
+
+    global.deactivatedUser = user
+    global.deactivatedUser.id = response.id
 
     return new Promise((resolve, reject) => {
       agent
@@ -165,7 +168,65 @@ describe('User api test', () => {
         .end((err, res) => {
           if (err) return reject(err)
           res.status.should.equal(200)
-          resolve()
+          agent
+            .get(`/api/v1/users/${response.id}`)
+            .end((err, r) => {
+              if (err) return reject(err)
+              r.status.should.equal(404)
+              resolve()
+            })
+        })
+    })
+  })
+
+  it('common user try to deactivate user', async () => {
+    const { response } = await createUser()
+    const { agent } = await login(global.user)
+
+    return new Promise((resolve, reject) => {
+      agent
+        .post(`/api/v1/users/${response.id}/deactivate`)
+        .end((err, res) => {
+          if (err) return reject(err)
+          res.status.should.equal(403)
+          agent
+            .get(`/api/v1/users/${response.id}`)
+            .end((err, r) => {
+              if (err) return reject(err)
+              r.status.should.equal(200)
+              resolve()
+            })
+        })
+    })
+  })
+
+  it('deactivated user can not login', done => {
+    supertest(baseUrl)
+      .post('/api/v1/login')
+      .send(global.deactivatedUser)
+      .end((err, res) => {
+        if (err) throw err
+        res.status.should.equal(404)
+        done()
+      })
+  })
+
+  it('admin activate user', async () => {
+    const { agent } = await login(global.admin)
+
+    return new Promise((resolve, reject) => {
+      agent
+        .post(`/api/v1/users/${global.deactivatedUser.id}/activate`)
+        .end((err, res) => {
+          if (err) return reject(err)
+          res.status.should.equal(200)
+          agent
+            .get(`/api/v1/users/${global.deactivatedUser.id}`)
+            .end((err, r) => {
+              if (err) return reject(err)
+              r.body.status.should.equal('active')
+              resolve()
+            })
         })
     })
   })

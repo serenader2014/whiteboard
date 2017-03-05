@@ -42,7 +42,7 @@ export class User extends bookshelf.Model {
       throw new RecordNotFound('Can not find target user')
     }
 
-    if (user.status === 'inactive') {
+    if (user.get('status') === 'inactive') {
       throw new RecordNotFound('User is in inactive status')
     }
 

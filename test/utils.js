@@ -84,6 +84,7 @@ export function login(user) {
 export async function insertInitialData() {
   const User = require('../src/model/users').User
   const Role = require('../src/model/roles').Role
+  const Roles = require('../src/model/roles').Roles
   const adminInfo = {
     email: 'admin@test.com',
     password: 'helloworld',
@@ -105,6 +106,9 @@ export async function insertInitialData() {
   await user.roles().detach(roles.models)
   const userRole = await Role.query({ name: 'user' })
   await user.roles().attach(userRole)
+
+  const rolesList = await Roles.query({})
   global.admin = adminInfo
   global.user = userInfo
+  global.roles = rolesList
 }
