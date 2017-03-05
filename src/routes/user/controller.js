@@ -40,7 +40,7 @@ export async function activateUser(ctx) {
 
 export async function updateUserRoles(ctx) {
   const { id } = ctx.params
-  const roles = ctx.request.body.roles.split(',')
+  const roles = (ctx.request.body.roles || '').toString().split(',')
 
   const user = await ctx.api.changeUserRole(id, roles)
   ctx.body = user.json(true)

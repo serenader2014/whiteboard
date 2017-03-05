@@ -110,5 +110,5 @@ export async function insertInitialData() {
   const rolesList = await Roles.query({})
   global.admin = adminInfo
   global.user = userInfo
-  global.roles = rolesList
+  global.roles = rolesList.toJSON()
 }

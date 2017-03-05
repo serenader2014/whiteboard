@@ -230,4 +230,69 @@ describe('User api test', () => {
         })
     })
   })
+
+  it('admin change other user role to common user', async () => {
+    const { agent } = await login(global.admin)
+    const { response } = await createUser()
+    const targetRole = global.roles.filter(item => item.name === 'user')[0].id
+
+    return new Promise((resolve, reject) => {
+      agent
+        .put(`/api/v1/users/${response.id}/roles`)
+        .send({ roles: targetRole })
+        .end((err, res) => {
+          if (err) return reject(err)
+          res.status.should.equal(200)
+          agent
+            .get(`/api/v1/users/${response.id}/roles`)
+            .end((err, r) => {
+              if (err) return reject(err)
+              r.body.length.should.equal(1)
+              r.body[0].name.should.equal('user')
+              resolve()
+            })
+        })
+    })
+  })
+
+  it('admin change other user role to admin user', async () => {
+    const { agent } = await login(global.admin)
+    const { response } = await createUser()
+    const targetRole = global.roles.filter(item => item.name === 'admin')[0].id
+
+    return new Promise((resolve, reject) => {
+      agent
+        .put(`/api/v1/users/${response.id}/roles`)
+        .send({ roles: targetRole })
+        .end((err, res) => {
+          if (err) return reject(err)
+          res.status.should.equal(200)
+          agent
+            .get(`/api/v1/users/${response.id}/roles`)
+            .end((err, r) => {
+              if (err) return reject(err)
+              r.body.length.should.equal(1)
+              r.body[0].name.should.equal('admin')
+              resolve()
+            })
+        })
+    })
+  })
+
+  it('common user try to change other user role', async () => {
+    const { agent } = await login(global.user)
+    const { response } = await createUser()
+    const targetRole = global.roles.filter(item => item.name === 'admin')[0].id
+
+    return new Promise((resolve, reject) => {
+      agent
+        .put(`/api/v1/users/${response.id}/roles`)
+        .send({ roles: targetRole })
+        .end((err, res) => {
+          if (err) return reject(err)
+          res.status.should.equal(403)
+          resolve()
+        })
+    })
+  })
 })

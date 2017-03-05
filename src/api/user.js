@@ -55,9 +55,20 @@ export async function changeUserRole(requester, id, roles) {
   const isOperationPermitted = await canThis(requester, 'update', 'user.roles', targetResource)
   if (!isOperationPermitted) throw new OperationNotPermitted(`You dont have permission to update user roles`)
 
-  const targetRoles = await Roles.query(qb => qb.whereIn('id', roles))
+  let targetRoles = await Roles.query(qb => qb.whereIn('id', roles))
+  const currentRoles = await targetResource.roles().fetch()
 
-  await targetResource.roles().attach(targetRoles.models)
+  const addedRoles = targetRoles.filter(item => !currentRoles.get(item.get('id')))
+  const deletedRoles = currentRoles.filter(item => !targetRoles.get(item.get('id')))
+
+  if (addedRoles.length) {
+    await targetResource.roles().attach(addedRoles.map(item => item.get('id')))
+  }
+
+  if (deletedRoles.length) {
+    await targetResource.roles().detach(deletedRoles.map(item => item.get('id')))
+  }
+
   return targetResource
 }
 
