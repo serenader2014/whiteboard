@@ -85,6 +85,7 @@ export async function insertInitialData() {
   const User = require('../src/model/users').User
   const Role = require('../src/model/roles').Role
   const Roles = require('../src/model/roles').Roles
+  const Settings = require('../src/model/settings').Settings
   const adminInfo = {
     email: 'admin@test.com',
     password: 'helloworld',
@@ -99,8 +100,11 @@ export async function insertInitialData() {
     created_at: new Date(),
     created_by: 0
   }
-  await new User(adminInfo).save()
+  const admin = await new User(adminInfo).save()
   const user = await new User(userInfo).save()
+
+  adminInfo.id = admin.id
+  userInfo.id = user.id
 
   const roles = await user.roles().fetch()
   await user.roles().detach(roles.models)
@@ -108,7 +112,9 @@ export async function insertInitialData() {
   await user.roles().attach(userRole)
 
   const rolesList = await Roles.query({})
+  const settings = await Settings.query({})
   global.admin = adminInfo
   global.user = userInfo
   global.roles = rolesList.toJSON()
+  global.settings = settings.toJSON()
 }

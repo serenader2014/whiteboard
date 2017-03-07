@@ -6,7 +6,7 @@ export const baseUrl = '/api/v1/settings'
 export default {
   '/': [{
     method: 'GET',
-    handlers: [listSetting]
+    handlers: [requireAuthenticated(), listSetting]
   }],
   '/:id': [{
     method: 'PUT',

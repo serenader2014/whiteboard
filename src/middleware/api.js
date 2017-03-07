@@ -3,9 +3,12 @@ export function api() {
   return async function middleware(ctx, next) {
     ctx.api = {}
     for (const i of Object.keys(apis)) {
-      ctx.api[i] = function(...args) {
-        const requester = ctx.state.user || 'guest'
-        return apis[i](requester, ...args)
+      ctx.api[i] = {}
+      for (const k of Object.keys(apis[i])) {
+        ctx.api[i][k] = function(...args) {
+          const requester = ctx.state.user || 'guest'
+          return apis[i][k](requester, ...args)
+        }
       }
     }
 

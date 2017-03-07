@@ -1,12 +1,12 @@
 export async function createUser(ctx, next) {
   const { email, password } = ctx.request.body
 
-  const newUser = await ctx.api.createUser({ email, password })
+  const newUser = await ctx.api.user.create({ email, password })
   ctx.body = newUser.json(true)
 }
 
 export async function getUserInfo(ctx) {
-  ctx.body = await ctx.api.getUserInfo(ctx.params.id)
+  ctx.body = await ctx.api.user.getInfo(ctx.params.id)
 }
 
 export function getSelfInfo(ctx) {
@@ -16,25 +16,25 @@ export function getSelfInfo(ctx) {
 export async function updateUserInfo(ctx) {
   const { id } = ctx.params
 
-  const user = await ctx.api.updateUserInfo(id, ctx.request.body)
+  const user = await ctx.api.user.updateInfo(id, ctx.request.body)
   ctx.body = user.json(true)
 }
 
 export async function deleteUser(ctx) {
   const { id } = ctx.params
-  await ctx.api.deleteUser(id)
+  await ctx.api.user.del(id)
   ctx.body = { status: 'ok' }
 }
 
 export async function deactivateUser(ctx) {
   const { id } = ctx.params
-  const user = await ctx.api.updateUserStatus(id, 'inactive')
+  const user = await ctx.api.user.updateStatus(id, 'inactive')
   ctx.body = user.json(true)
 }
 
 export async function activateUser(ctx) {
   const { id } = ctx.params
-  const user = await ctx.api.updateUserStatus(id, 'active')
+  const user = await ctx.api.user.updateStatus(id, 'active')
   ctx.body = user.json(true)
 }
 
@@ -42,7 +42,7 @@ export async function updateUserRoles(ctx) {
   const { id } = ctx.params
   const roles = (ctx.request.body.roles || '').toString().split(',')
 
-  const user = await ctx.api.changeUserRole(id, roles)
+  const user = await ctx.api.user.changeRole(id, roles)
   ctx.body = user.json(true)
 }
 
@@ -50,11 +50,11 @@ export async function changePassword(ctx) {
   const { oldPassword, newPassword } = ctx.request.body
   const { id } = ctx.params
 
-  const user = await ctx.api.changePassword(id, oldPassword, newPassword)
+  const user = await ctx.api.user.changePassword(id, oldPassword, newPassword)
   ctx.body = user.json(true)
 }
 
 export async function getUserRoles(ctx) {
   const { id } = ctx.params
-  ctx.body = await ctx.api.getUserRoles(id)
+  ctx.body = await ctx.api.user.getRoles(id)
 }
