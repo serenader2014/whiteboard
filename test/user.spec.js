@@ -295,4 +295,52 @@ describe('User api test', () => {
         })
     })
   })
+
+  it('user try to change password', async () => {
+    const { response, user } = await createUser()
+    const { agent } = await login(user)
+    const newPassword = 'newpassword!'
+
+    return new Promise((resolve, reject) => {
+      agent
+        .put(`/api/v1/users/${response.id}/password`)
+        .send({ oldPassword: user.password, newPassword: newPassword })
+        .end((err, res) => {
+          if (err) return reject(err)
+          res.status.should.equal(200)
+          supertest(baseUrl)
+            .post('/api/v1/login')
+            .send({ email: user.email, password: newPassword })
+            .end((err, r) => {
+              if (err) return reject(err)
+              r.status.should.equal(200)
+              resolve()
+            })
+        })
+    })
+  })
+
+  it('user try to change password using an invalid old password', async () => {
+    const { response, user } = await createUser()
+    const { agent } = await login(user)
+    const newPassword = 'newpassword!'
+
+    return new Promise((resolve, reject) => {
+      agent
+        .put(`/api/v1/users/${response.id}/password`)
+        .send({ oldPassword: newPassword, newPassword: newPassword })
+        .end((err, res) => {
+          if (err) return reject(err)
+          res.status.should.equal(401)
+          supertest(baseUrl)
+            .post('/api/v1/login')
+            .send({ email: user.email, password: newPassword })
+            .end((err, r) => {
+              if (err) return reject(err)
+              r.status.should.equal(401)
+              resolve()
+            })
+        })
+    })
+  })
 })

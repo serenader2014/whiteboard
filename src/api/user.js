@@ -1,7 +1,7 @@
 import _ from 'lodash'
 
 import { User, Users, Roles } from '../model'
-import { OperationNotPermitted } from '../exceptions'
+import { OperationNotPermitted, BadPassword } from '../exceptions'
 import { canThis } from '../service/permission'
 
 export async function createUser(requester, object) {
@@ -93,6 +93,17 @@ export async function getUserRoles(requester, id) {
   if (!isOperationPermitted) throw new OperationNotPermitted(`You dont have permission to read user roles`)
 
   return targetResource.roles().fetch()
+}
+
+export async function changePassword(requester, id, oldPassword, newPassword) {
+  const targetResource = await User.getActiveUser({ id })
+  const isOperationPermitted = await canThis(requester, 'update', 'user', targetResource)
+  if (!isOperationPermitted) throw new OperationNotPermitted(`You dont have permission to change user password`)
+
+  const isPasswordCorrect = await targetResource.validatePassword(oldPassword)
+  if (!isPasswordCorrect) throw new BadPassword(`Old password is not correct`)
+
+  return targetResource.save({ password: newPassword })
 }
 
 export async function listUser() {

@@ -46,8 +46,12 @@ export async function updateUserRoles(ctx) {
   ctx.body = user.json(true)
 }
 
-export async function changePassword() {
+export async function changePassword(ctx) {
+  const { oldPassword, newPassword } = ctx.request.body
+  const { id } = ctx.params
 
+  const user = await ctx.api.changePassword(id, oldPassword, newPassword)
+  ctx.body = user.json(true)
 }
 
 export async function getUserRoles(ctx) {
