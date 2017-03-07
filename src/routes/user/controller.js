@@ -58,3 +58,7 @@ export async function getUserRoles(ctx) {
   const { id } = ctx.params
   ctx.body = await ctx.api.user.getRoles(id)
 }
+
+export async function listUsers(ctx) {
+  ctx.body = await ctx.api.user.list()
+}

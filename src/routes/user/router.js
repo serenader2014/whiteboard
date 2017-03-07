@@ -8,7 +8,8 @@ import {
   activateUser,
   updateUserRoles,
   changePassword,
-  getUserRoles
+  getUserRoles,
+  listUsers
 } from './controller'
 import { requireAuthenticated } from '../../middleware'
 
@@ -16,6 +17,9 @@ export const baseUrl = '/api/v1/users'
 
 export default {
   '/': [{
+    method: 'GET',
+    handlers: [listUsers]
+  }, {
     method: 'POST',
     handlers: [requireAuthenticated(), createUser]
   }],
