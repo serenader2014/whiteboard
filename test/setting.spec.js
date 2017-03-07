@@ -1,6 +1,6 @@
 import supertest from 'supertest'
 
-import { login } from './utils'
+import { login, createUser } from './utils'
 
 const baseUrl = `http://localhost:${process.env.APP_PORT}`
 describe('setting api test', () => {
@@ -39,6 +39,21 @@ describe('setting api test', () => {
           if (err) return reject(err)
           res.status.should.equal(200)
           res.body.value.should.equal('user')
+          resolve()
+        })
+    })
+  })
+
+  it('newly created users role must be common user', async () => {
+    const { response, user } = await createUser()
+    const { agent } = await login(user)
+
+    return new Promise((resolve, reject) => {
+      agent
+        .get(`/api/v1/users/${response.id}/roles`)
+        .end((err, res) => {
+          if (err) return reject(err)
+          res.body[0].name.should.equal('user')
           resolve()
         })
     })
