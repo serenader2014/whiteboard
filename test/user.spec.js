@@ -121,6 +121,34 @@ describe('User api test', () => {
     })
   })
 
+  it('get user info by email', async () => {
+    const { response } = await createUser()
+
+    return new Promise((resolve, reject) => {
+      supertest(baseUrl)
+        .get(`/api/v1/users/email/${response.email}`)
+        .end((err, res) => {
+          if (err) return reject(err)
+          res.body.email.should.equal(response.email)
+          resolve()
+        })
+    })
+  })
+
+  it('get user info by slug', async () => {
+    const { response } = await createUser()
+
+    return new Promise((resolve, reject) => {
+      supertest(baseUrl)
+        .get(`/api/v1/users/slug/${response.slug}`)
+        .end((err, res) => {
+          if (err) return reject(err)
+          res.body.slug.should.equal(response.slug)
+          resolve()
+        })
+    })
+  })
+
   it('admin try to delete user', async () => {
     const { user, response } = await createUser()
     user.id = response.id

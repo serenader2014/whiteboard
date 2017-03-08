@@ -87,6 +87,18 @@ export async function getInfo(requester, id) {
   return targetResource.json(isOperationPermitted)
 }
 
+export async function getBySlug(requester, slug) {
+  const targetResource = await User.getActiveUser({ slug })
+  const isOperationPermitted = await canThis(requester, 'read', 'user', targetResource)
+  return targetResource.json(isOperationPermitted)
+}
+
+export async function getByEmail(requester, email) {
+  const targetResource = await User.getActiveUser({ email })
+  const isOperationPermitted = await canThis(requester, 'read', 'user', targetResource)
+  return targetResource.json(isOperationPermitted)
+}
+
 export async function getRoles(requester, id) {
   const targetResource = await User.getActiveUser({ id })
   const isOperationPermitted = await canThis(requester, 'read', 'user.roles', targetResource)

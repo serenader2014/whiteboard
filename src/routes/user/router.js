@@ -9,7 +9,9 @@ import {
   updateUserRoles,
   changePassword,
   getUserRoles,
-  listUsers
+  listUsers,
+  getUserInfoByEmail,
+  getUserInfoBySlug
 } from './controller'
 import { requireAuthenticated } from '../../middleware'
 
@@ -26,6 +28,14 @@ export default {
   '/self': [{
     method: 'GET',
     handlers: [requireAuthenticated(), getSelfInfo]
+  }],
+  '/email/:email': [{
+    method: 'GET',
+    handlers: [getUserInfoByEmail]
+  }],
+  '/slug/:slug': [{
+    method: 'GET',
+    handlers: [getUserInfoBySlug]
   }],
   '/:id': [{
     method: 'GET',

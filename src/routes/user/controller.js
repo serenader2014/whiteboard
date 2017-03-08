@@ -62,3 +62,13 @@ export async function getUserRoles(ctx) {
 export async function listUsers(ctx) {
   ctx.body = await ctx.api.user.list()
 }
+
+export async function getUserInfoByEmail(ctx) {
+  const { email } = ctx.params
+  ctx.body = await ctx.api.user.getByEmail(email)
+}
+
+export async function getUserInfoBySlug(ctx) {
+  const { slug } = ctx.params
+  ctx.body = await ctx.api.user.getBySlug(slug)
+}
