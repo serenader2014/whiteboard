@@ -8,7 +8,8 @@ should()
 setUpEnv()
 
 describe('Whiteboard server api test', () => {
-  before(async () => {
+  before(async function() {
+    this.timeout(5000)
     await setUpDB()
     await require('../src/index').default()
     await insertInitialData()
