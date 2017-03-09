@@ -324,7 +324,8 @@ describe('User api test', () => {
     })
   })
 
-  it('user try to change password', async () => {
+  it('user try to change password', async function() {
+    this.timeout(5000)
     const { response, user } = await createUser()
     const { agent } = await login(user)
     const newPassword = 'newpassword!'
