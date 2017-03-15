@@ -86,6 +86,7 @@ export async function insertInitialData() {
   const Role = require('../src/model/roles').Role
   const Roles = require('../src/model/roles').Roles
   const Settings = require('../src/model/settings').Settings
+  const Categories = require('../src/model/categories').Categories
   const adminInfo = {
     email: 'admin@test.com',
     password: 'helloworld',
@@ -113,8 +114,10 @@ export async function insertInitialData() {
 
   const rolesList = await Roles.query({})
   const settings = await Settings.query({})
+  const categories = await Categories.query({})
   global.admin = adminInfo
   global.user = userInfo
   global.roles = rolesList.toJSON()
   global.settings = settings.toJSON()
+  global.categories = categories.toJSON()
 }

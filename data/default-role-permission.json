@@ -22,9 +22,11 @@
     "user.roles": [{
       "name": "read",
       "condition": "requester.id=resource.id"
-    }]
+    }],
+    "category": ["read"]
   },
   "guest": {
-    "post": ["read"]
+    "post": ["read"],
+    "category": ["read"]
   }
 }
