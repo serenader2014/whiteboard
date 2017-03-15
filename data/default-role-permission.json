@@ -4,7 +4,8 @@
     "user": ["read", "create", "update", "delete"],
     "user.status": ["update"],
     "user.roles": ["read", "update"],
-    "setting": ["read", "create", "update", "delete"]
+    "setting": ["read", "create", "update", "delete"],
+    "category": ["read", "create", "update", "delete"]
   },
   "user": {
     "user": [{

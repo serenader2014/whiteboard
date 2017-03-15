@@ -1,4 +1,5 @@
 import bookshelf from '../db/bookshelf'
+import CategoryField from '../service/validator/category-field'
 
 export class Category extends bookshelf.Model {
   get tableName() {
@@ -16,6 +17,12 @@ export class Category extends bookshelf.Model {
       created_by: 0,
       created_at: new Date()
     }
+  }
+
+  async onSaving(model, attrs, options) {
+    const { name } = model.attributes
+
+    await new CategoryField({ name }).execute()
   }
 }
 

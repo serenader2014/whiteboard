@@ -1,11 +1,20 @@
 import knex from './connection'
 import createTable from './create-table'
 import schemas from './schemas'
-import { Setting, Settings, Role, Roles, Permission } from '../model'
+import {
+  Setting,
+  Settings,
+  Role,
+  Roles,
+  Permission,
+  Categories,
+  Category
+} from '../model'
 
 import defaultSettings from '../../data/default-settings'
 import defaultRoles from '../../data/default-roles'
 import permissionControl from '../../data/default-role-permission'
+import defaultCategories from '../../data/default-categories'
 
 export default async function() {
   for (let model of Object.keys(schemas)) {
@@ -50,6 +59,13 @@ export default async function() {
   if (!settings.length) {
     for (let setting of defaultSettings) {
       await Setting.create(setting)
+    }
+  }
+
+  const categories = await Categories.query()
+  if (!categories.length) {
+    for (let category of defaultCategories) {
+      await Category.create(category)
     }
   }
 }

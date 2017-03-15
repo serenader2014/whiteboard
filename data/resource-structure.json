@@ -26,5 +26,12 @@
         "created_by": { "access": ["protected"] },
         "updated_at": { "access": ["protected"] },
         "updated_by": { "access": ["protected"] }
+    },
+    "categories": {
+        "name": { "access": ["public"] },
+        "created_at": { "access": ["protected"] },
+        "created_by": { "access": ["protected"] },
+        "updated_at": { "access": ["protected"] },
+        "updated_by": { "access": ["protected"] }
     }
 }
