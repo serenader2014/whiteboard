@@ -12,8 +12,8 @@ export class Slug {
     switch (this.type) {
       case 'user':
         return await require('./users').User.query({ slug })
-      // case 'post':
-      //   return await require('../api/post').bySlug(slug)
+      case 'post':
+        return await require('./posts').Post.query({ slug })
       case 'category':
         return await require('./categories').Category.query({ slug })
       default:

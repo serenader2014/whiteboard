@@ -1,7 +1,9 @@
 import bookshelf from '../db/bookshelf'
-import { Category, User } from './index'
+import { Category, User, Slug } from './index'
 
 import PostField from '../service/validator/post-field'
+
+const postSlug = new Slug('post')
 
 export class Post extends bookshelf.Model {
   get tableName() {
@@ -20,6 +22,11 @@ export class Post extends bookshelf.Model {
 
   async onSaving(model, attrs, options) {
     await new PostField(model.attributes).execute()
+
+    if (model.hasChanged('title')) {
+      const slug = await postSlug.digest(model.attributes.title)
+      model.set('slug', slug)
+    }
   }
 
   category() {
