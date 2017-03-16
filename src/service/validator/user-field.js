@@ -41,4 +41,3 @@ export default class UserField {
     return check.run(this.payload)
   }
 }
-

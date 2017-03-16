@@ -14,8 +14,8 @@ export class Slug {
         return await require('./users').User.query({ slug })
       // case 'post':
       //   return await require('../api/post').bySlug(slug)
-      // case 'category':
-      //   return await require('../api/category').bySlug(slug)
+      case 'category':
+        return await require('./categories').Category.query({ slug })
       default:
         return Promise.reject(`slug type must be either \`user\`
        or \`post\` or \`category\``)

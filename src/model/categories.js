@@ -1,5 +1,8 @@
 import bookshelf from '../db/bookshelf'
 import CategoryField from '../service/validator/category-field'
+import { Slug } from './slug'
+
+const categorySlug = new Slug('category')
 
 export class Category extends bookshelf.Model {
   get tableName() {
@@ -23,6 +26,11 @@ export class Category extends bookshelf.Model {
     const { name } = model.attributes
 
     await new CategoryField({ name }).execute()
+
+    if (model.hasChanged('name')) {
+      const slug = await categorySlug.digest(name)
+      model.set('slug', slug)
+    }
   }
 }
 

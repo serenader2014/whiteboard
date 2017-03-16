@@ -73,6 +73,7 @@ export default {
   categories: {
     id: { type: increments, nullable: false, primary: true },
     name: { type: str, maxlength: 150, nullable: false, unique: true },
+    slug: { type: str, maxlength: 150, nullable: false, unique: true },
     created_at: { type: dateTime, nullable: false },
     created_by: { type: int, nullable: false },
     updated_at: { type: dateTime, nullable: true },
