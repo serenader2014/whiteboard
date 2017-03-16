@@ -23,7 +23,14 @@
       "name": "read",
       "condition": "requester.id=resource.id"
     }],
-    "category": ["read"]
+    "category": ["read"],
+    "post": [{
+      "name": "update",
+      "condition": "requester.id=resource.id"
+    }, {
+      "name": "read",
+      "condition": "requester.id=resource.id"
+    }]
   },
   "guest": {
     "post": ["read"],

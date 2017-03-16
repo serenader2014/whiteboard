@@ -1,18 +1,12 @@
 import bookshelf from '../db/bookshelf'
 import CategoryField from '../service/validator/category-field'
-import { Slug } from './slug'
+import { Slug, Post } from './index'
 
 const categorySlug = new Slug('category')
 
 export class Category extends bookshelf.Model {
   get tableName() {
     return 'categories'
-  }
-
-  static get availableFields() {
-    return [
-      'name'
-    ]
   }
 
   static get defaultFields() {
@@ -31,6 +25,10 @@ export class Category extends bookshelf.Model {
       const slug = await categorySlug.digest(name)
       model.set('slug', slug)
     }
+  }
+
+  posts() {
+    return this.hasMany(Post)
   }
 }
 

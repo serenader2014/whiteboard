@@ -2,4 +2,8 @@
   "type": "core",
   "key": "default_role",
   "value": "admin"
+},{
+  "type": "core",
+  "key": "default_category",
+  "value": "default"
 }]

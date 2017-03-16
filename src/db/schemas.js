@@ -6,6 +6,7 @@ const text = 'text'
 const increments = 'increments'
 // const date = 'date'
 const dateTime = 'dateTime'
+const boolean = 'bool'
 // const time = 'time'
 // const timestamp = 'timestamp'
 
@@ -78,5 +79,24 @@ export default {
     created_by: { type: int, nullable: false },
     updated_at: { type: dateTime, nullable: true },
     updated_by: { type: int, nullable: true }
+  },
+  posts: {
+    id: { type: increments, nullable: false, primary: true },
+    title: { type: str, maxlength: 150, nullable: false, unique: true },
+    cover: { type: text, maxlength: 2000, nullable: true },
+    excerpt: { type: text, maxLength: 500, nullable: true },
+    content: { type: text, maxLength: 1000000000, nullable: true },
+    html: { type: text, maxLength: 1000000000, nullable: true },
+    featured: { type: boolean, nullable: false, defaultTo: 'false' },
+    slug: { type: str, maxlength: 150, nullable: false, unique: true },
+    status: { type: str, maxLength: 150, nullable: false, defaultTo: 'draft' },
+    category_id: { type: int, nullable: false },
+    user_id: { type: int, nullable: false },
+    created_at: { type: dateTime, nullable: false },
+    created_by: { type: int, nullable: false },
+    updated_at: { type: dateTime, nullable: true },
+    updated_by: { type: int, nullable: true },
+    publish_at: { type: dateTime, nullable: true },
+    publish_by: { type: int, nullable: true }
   }
 }

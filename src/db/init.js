@@ -1,3 +1,5 @@
+import _ from 'lodash'
+
 import knex from './connection'
 import createTable from './create-table'
 import schemas from './schemas'
@@ -8,13 +10,16 @@ import {
   Roles,
   Permission,
   Categories,
-  Category
+  Category,
+  Post,
+  Posts
 } from '../model'
 
 import defaultSettings from '../../data/default-settings'
 import defaultRoles from '../../data/default-roles'
 import permissionControl from '../../data/default-role-permission'
 import defaultCategories from '../../data/default-categories'
+import defaultPosts from '../../data/default-posts'
 
 export default async function() {
   for (let model of Object.keys(schemas)) {
@@ -66,6 +71,19 @@ export default async function() {
   if (!categories.length) {
     for (let category of defaultCategories) {
       await Category.create(category)
+    }
+  }
+
+  const posts = await Posts.query()
+  if (!posts.lenght) {
+    const defaultCategorySetting = await Setting.query({ key: 'default_category' })
+    const category = await Category.query({ name: defaultCategorySetting.get('value') })
+    for (let post of defaultPosts) {
+      const obj = {
+        category_id: category.get('id'),
+        user_id: 0
+      }
+      await Post.create(_.extend({}, obj, post))
     }
   }
 }
