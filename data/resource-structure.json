@@ -29,6 +29,7 @@
     },
     "categories": {
         "name": { "access": ["public"] },
+        "id": { "access": ["public"] },
         "created_at": { "access": ["protected"] },
         "created_by": { "access": ["protected"] },
         "updated_at": { "access": ["protected"] },

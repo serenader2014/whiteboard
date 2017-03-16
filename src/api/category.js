@@ -27,3 +27,23 @@ export async function list(requester) {
   if (!isOperationPermitted) throw new OperationNotPermitted(`You dont have permission to read category`)
   return Categories.query({})
 }
+
+export async function update(requester, id, options) {
+  const isOperationPermitted = await canThis(requester, 'update', 'category')
+  if (!isOperationPermitted) throw new OperationNotPermitted(`You dont have permission to update category`)
+
+  const category = await Category.query({ id })
+  if (!category) throw new RecordNotFound(`Can not find target category: ID: ${id}`)
+
+  return Category.update(category, options, requester)
+}
+
+export async function del(requester, id) {
+  const isOperationPermitted = await canThis(requester, 'delete', 'category')
+  if (!isOperationPermitted) throw new OperationNotPermitted(`You dont have permission to delete category`)
+
+  const category = await Category.query({ id })
+  if (!category) throw new RecordNotFound(`Can not find target category: ID: ${id}`)
+
+  return category.destroy()
+}

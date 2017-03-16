@@ -12,11 +12,19 @@ export async function getCategory(ctx) {
 }
 
 export async function updateCategory(ctx) {
+  const { name } = ctx.request.body
+  const { id } = ctx.params
+  const category = await ctx.api.category.update(id, { name })
 
+  ctx.body = category.json(true)
 }
 
 export async function deleteCategory(ctx) {
+  const { id } = ctx.params
 
+  await ctx.api.category.del(id)
+
+  ctx.body = { message: 'ok' }
 }
 
 export async function createCategory(ctx) {

@@ -81,6 +81,24 @@ export function login(user) {
   })
 }
 
+export function createCategory() {
+  return login(global.admin)
+    .then(({ agent }) => {
+      const name = randomString(8)
+
+      return new Promise((resolve, reject) => {
+        agent
+          .post('/api/v1/categories')
+          .send({ name })
+          .end((err, res) => {
+            if (err) return reject(err)
+
+            resolve({ agent, category: res.body })
+          })
+      })
+    })
+}
+
 export async function insertInitialData() {
   const User = require('../src/model/users').User
   const Role = require('../src/model/roles').Role
