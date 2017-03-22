@@ -83,6 +83,10 @@ export default async function() {
         category_id: category.get('id'),
         user_id: 0
       }
+      if (post.status === 'published') {
+        obj.publish_by = 0
+        obj.publish_at = new Date()
+      }
       await Post.create(_.extend({}, obj, post))
     }
   }
