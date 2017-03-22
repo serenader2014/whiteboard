@@ -82,7 +82,7 @@ export default {
   },
   posts: {
     id: { type: increments, nullable: false, primary: true },
-    title: { type: str, maxlength: 150, nullable: false, unique: true },
+    title: { type: str, maxlength: 150, nullable: false, unique: false },
     cover: { type: text, maxlength: 2000, nullable: true },
     excerpt: { type: text, maxLength: 500, nullable: true },
     content: { type: text, maxLength: 1000000000, nullable: true },

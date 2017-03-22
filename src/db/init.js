@@ -75,7 +75,7 @@ export default async function() {
   }
 
   const posts = await Posts.query()
-  if (!posts.lenght) {
+  if (!posts.length) {
     const defaultCategorySetting = await Setting.query({ key: 'default_category' })
     const category = await Category.query({ name: defaultCategorySetting.get('value') })
     for (let post of defaultPosts) {
