@@ -1,9 +1,8 @@
 import _ from 'lodash'
-import htmlToText from 'html-to-text'
 
 import { Post } from '../model'
 import { canThis } from '../service/permission'
-import { OperationNotPermitted } from '../exceptions'
+import { OperationNotPermitted, RecordNotFound } from '../exceptions'
 
 export async function create(requester, object) {
   const isOperationPermitted = await canThis(requester, 'create', 'post')
@@ -22,13 +21,35 @@ export async function create(requester, object) {
   const postObject = _.pick(object, allowedFields)
 
   postObject.html = postObject.content
-  const excerpt = htmlToText.fromString(postObject.html)
-  postObject.excerpt = excerpt.length > 250 ? `${excerpt} ...` : excerpt
 
   if (postObject.status === 'published') {
     postObject.publish_by = postObject.user_id
-    postObject.publish_at = new Date()
   }
 
   return Post.create(postObject, requester)
+}
+
+export async function update(requester, id, object) {
+  const isOperationPermitted = await canThis(requester, 'update', 'post')
+  if (!isOperationPermitted) throw new OperationNotPermitted(`You dont have permission to update post`)
+  const targetResource = await Post.query({ id })
+  if (!targetResource) throw new RecordNotFound('Can not find target resource')
+
+  const allowedFields = [
+    'title',
+    'cover',
+    'content',
+    'featured',
+    'status',
+    'category_id'
+  ]
+
+  const postObject = _.pick(object, allowedFields)
+  postObject.html = postObject.content
+
+  if (postObject.status === 'published') {
+    postObject.publish_by = requester.id
+  }
+
+  return Post.update(targetResource, postObject, requester)
 }

@@ -1,3 +1,5 @@
+import htmlToText from 'html-to-text'
+
 import bookshelf from '../db/bookshelf'
 import { Category, User, Slug } from './index'
 
@@ -26,6 +28,15 @@ export class Post extends bookshelf.Model {
     if (model.hasChanged('title')) {
       const slug = await postSlug.digest(model.attributes.title)
       model.set('slug', slug)
+    }
+
+    if (model.hasChanged('status') && model.get('status') === 'published') {
+      model.set('publish_at', new Date())
+    }
+
+    if (model.hasChanged('html')) {
+      const excerpt = htmlToText.fromString(model.get('html'))
+      model.set('excerpt', excerpt.length > 250 ? `${excerpt} ...` : excerpt)
     }
   }
 
