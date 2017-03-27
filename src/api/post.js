@@ -55,7 +55,7 @@ export async function update(requester, id, object) {
 }
 
 export async function get(requester, id) {
-  const targetResource = await Post.query({ id })
+  const targetResource = await Post.query({ id }, { withRelated: ['user', 'category'] })
   if (!targetResource) {
     throw new RecordNotFound('Can not find target resource')
   }
