@@ -31,7 +31,7 @@
     }, {
       "name": "read",
       "condition": "requester.id=resource.user_id"
-    }],
+    }, "create"],
     "unpublished_post": [{
       "name": "update",
       "condition": "requester.id=resource.user_id"

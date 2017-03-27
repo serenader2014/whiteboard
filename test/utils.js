@@ -99,7 +99,7 @@ export function createCategory() {
     })
 }
 
-export function createPost(status = 'published', category = global.categories[0].id) {
+export function createPost(status = 'published', category = global.categories[0].id, user = global.admin) {
   return login(global.admin)
     .then(({ agent }) => {
       const postInfo = {

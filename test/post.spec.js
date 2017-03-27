@@ -77,8 +77,10 @@ describe('post api test', () => {
     })
   })
 
+  let draft = null
   it('unpublished post can not be reached by guest', async () => {
     const { post } = await createPost('draft')
+    draft = post
     return new Promise((resolve, reject) => {
       supertest(baseUrl)
         .get(`/api/v1/posts/${post.id}`)
@@ -86,6 +88,28 @@ describe('post api test', () => {
           if (err) return reject(err)
           res.status.should.equal(404)
           resolve()
+        })
+    })
+  })
+
+  it('publish a draft', async () => {
+    const { agent } = await login(global.admin)
+
+    return new Promise((resolve, reject) => {
+      agent
+        .put(`/api/v1/posts/${draft.id}`)
+        .send(Object.assign({}, draft, { status: 'published' }))
+        .end((err, res) => {
+          if (err) return reject(err)
+          res.status.should.equal(200)
+          supertest(baseUrl)
+            .get(`/api/v1/posts/${draft.id}`)
+            .end((err, res) => {
+              if (err) return reject(err)
+              res.status.should.equal(200)
+              console.log(res.body)
+              resolve()
+            })
         })
     })
   })
