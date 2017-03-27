@@ -50,7 +50,22 @@ describe('post api test', () => {
   })
 
   it('unpublished post can be reached by author', async () => {
-    const { agent, post } = await createPost('draft')
+    const { agent, post } = await createPost('draft', global.categories[0].id, global.user)
+
+    return new Promise((resolve, reject) => {
+      agent
+        .get(`/api/v1/posts/${post.id}`)
+        .end((err, res) => {
+          if (err) return reject(err)
+          res.status.should.equal(200)
+          resolve()
+        })
+    })
+  })
+
+  it('unpublished post can be reached by admin', async () => {
+    const { post } = await createPost('draft', global.categories[0].id, global.user)
+    const { agent } = await login(global.admin)
 
     return new Promise((resolve, reject) => {
       agent
@@ -107,9 +122,31 @@ describe('post api test', () => {
             .end((err, res) => {
               if (err) return reject(err)
               res.status.should.equal(200)
-              console.log(res.body)
               resolve()
             })
+        })
+    })
+  })
+
+  it('list posts', done => {
+    supertest(baseUrl)
+      .get('/api/v1/posts')
+      .end((err, res) => {
+        if (err) throw err
+        res.body.length.should.above(0)
+        done()
+      })
+  })
+
+  it('list draft', async () => {
+    const { agent } = await createPost('draft', global.categories[0].id, global.user)
+    return new Promise((resolve, reject) => {
+      agent
+        .get('/api/v1/posts/drafts')
+        .end((err, res) => {
+          if (err) return reject(err)
+          res.body.length.should.above(0)
+          resolve()
         })
     })
   })

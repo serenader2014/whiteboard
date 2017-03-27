@@ -1,6 +1,6 @@
 import _ from 'lodash'
 
-import { Post } from '../model'
+import { Post, Posts } from '../model'
 import { canThis } from '../service/permission'
 import { OperationNotPermitted, RecordNotFound } from '../exceptions'
 
@@ -68,4 +68,23 @@ export async function get(requester, id) {
   }
 
   return targetResource
+}
+
+export async function listPublishedPost(requester) {
+  const posts = await Posts.query({ status: 'published' })
+
+  return posts
+}
+
+export async function listDraft(requester) {
+  const drafts = await Posts.query({ status: 'draft' })
+  const result = []
+  for (const i of drafts.models) {
+    const isOperationPermitted = await canThis(requester, 'read', 'unpublished_post', i)
+    if (isOperationPermitted) {
+      result.push(i)
+    }
+  }
+
+  return result
 }

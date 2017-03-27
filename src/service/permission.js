@@ -40,7 +40,7 @@ export async function canThis(requester, actionType, objectType, resource) {
         }
 
         if (rightResourceMatch) {
-          rightExpression = await resource[rightResourceMatch[1]]
+          rightExpression = (await resource[rightResourceMatch[1]]) || resource.get(rightResourceMatch[1])
         }
 
         if (rightStringMatch) {

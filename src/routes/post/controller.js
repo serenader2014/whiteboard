@@ -7,8 +7,10 @@ export async function getPost(ctx) {
   ctx.body = post.json()
 }
 
-export async function listPost() {
+export async function listPost(ctx) {
+  const posts = await ctx.api.post.listPublishedPost()
 
+  ctx.body = posts.toJSON()
 }
 
 export async function updatePost(ctx) {
@@ -33,4 +35,8 @@ export async function createDraft() {
 
 export async function updateDraft() {
 
+}
+
+export async function listDraft(ctx) {
+  ctx.body = await ctx.api.post.listDraft()
 }

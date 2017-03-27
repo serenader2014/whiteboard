@@ -100,7 +100,7 @@ export function createCategory() {
 }
 
 export function createPost(status = 'published', category = global.categories[0].id, user = global.admin) {
-  return login(global.admin)
+  return login(user)
     .then(({ agent }) => {
       const postInfo = {
         title: 'this is a post created by test',

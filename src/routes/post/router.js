@@ -1,5 +1,5 @@
 import { requireAuthenticated } from '../../middleware'
-import { listPost, createPost, getPost, updatePost, createDraft, updateDraft } from './controller'
+import { listPost, createPost, getPost, updatePost, listDraft, createDraft, updateDraft } from './controller'
 
 export const baseUrl = '/api/v1/posts'
 
@@ -10,6 +10,10 @@ export default {
   }, {
     method: 'POST',
     handlers: [requireAuthenticated(), createPost]
+  }],
+  '/drafts': [{
+    method: 'GET',
+    handlers: [requireAuthenticated(), listDraft]
   }],
   '/:id': [{
     method: 'GET',
