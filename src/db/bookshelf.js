@@ -69,7 +69,7 @@ blogBookshelf.Model = class Model extends blogBookshelf.Model {
   static async update(target, fields, executor) {
     const finalFields = _.extend({}, this.defaultFields, target.attributes, fields)
 
-    finalFields.updated_at = new Date()
+    finalFields.updated_at = new Date().getTime()
     if (executor) {
       finalFields.updated_by = executor.id
     }

@@ -30,9 +30,28 @@
   "categories": {
     "name": { "access": ["public"] },
     "id": { "access": ["public"] },
-    "created_at": { "access": ["protected"] },
-    "created_by": { "access": ["protected"] },
-    "updated_at": { "access": ["protected"] },
-    "updated_by": { "access": ["protected"] }
+    "created_at": { "access": ["public"] },
+    "created_by": { "access": ["public"] },
+    "updated_at": { "access": ["public"] },
+    "updated_by": { "access": ["public"] }
+  },
+  "posts": {
+    "id": { "access": ["public"] },
+    "title": { "access": ["public"] },
+    "cover": { "access": ["public"] },
+    "excerpt": { "access": ["public"] },
+    "content": { "access": ["public"] },
+    "html": { "access": ["public"] },
+    "featured": { "access": ["public"] },
+    "slug": { "access": ["public"] },
+    "status": { "access": ["protected"] },
+    "category_id": { "access": ["public"] },
+    "user_id": { "access": ["public"] },
+    "created_at": { "access": ["public"] },
+    "created_by": { "access": ["public"] },
+    "updated_at": { "access": ["public"] },
+    "updated_by": { "access": ["public"] },
+    "publish_at": { "access": ["public"] },
+    "publish_by": { "access": ["public"] }
   }
 }

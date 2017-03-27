@@ -30,8 +30,8 @@ export class Post extends bookshelf.Model {
       model.set('slug', slug)
     }
 
-    if (model.hasChanged('status') && model.get('status') === 'published') {
-      model.set('publish_at', new Date())
+    if (model.hasChanged('status')) {
+      model.set('publish_at', model.get('status') === 'published' ? new Date() : 0)
     }
 
     if (model.hasChanged('html')) {
