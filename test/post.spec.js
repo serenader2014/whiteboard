@@ -1,6 +1,7 @@
-// import supertest from 'supertest'
+import supertest from 'supertest'
 
 import { login, createPost } from './utils'
+const baseUrl = `http://localhost:${process.env.APP_PORT}`
 
 describe('post api test', () => {
   it('try to create post', async () => {
@@ -67,6 +68,19 @@ describe('post api test', () => {
     const { agent } = await login(global.user)
     return new Promise((resolve, reject) => {
       agent
+        .get(`/api/v1/posts/${post.id}`)
+        .end((err, res) => {
+          if (err) return reject(err)
+          res.status.should.equal(404)
+          resolve()
+        })
+    })
+  })
+
+  it('unpublished post can not be reached by guest', async () => {
+    const { post } = await createPost('draft')
+    return new Promise((resolve, reject) => {
+      supertest(baseUrl)
         .get(`/api/v1/posts/${post.id}`)
         .end((err, res) => {
           if (err) return reject(err)

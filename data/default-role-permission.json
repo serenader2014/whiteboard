@@ -1,6 +1,7 @@
 {
   "admin": {
     "post": ["read", "create", "update", "delete"],
+    "unpublished_post": ["read", "create", "update", "delete"],
     "user": ["read", "create", "update", "delete"],
     "user.status": ["update"],
     "user.roles": ["read", "update"],
@@ -25,6 +26,13 @@
     }],
     "category": ["read"],
     "post": [{
+      "name": "update",
+      "condition": "requester.id=resource.user_id"
+    }, {
+      "name": "read",
+      "condition": "requester.id=resource.user_id"
+    }],
+    "unpublished_post": [{
       "name": "update",
       "condition": "requester.id=resource.user_id"
     }, {

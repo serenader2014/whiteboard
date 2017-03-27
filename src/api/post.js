@@ -59,9 +59,11 @@ export async function get(requester, id) {
   if (!targetResource) {
     throw new RecordNotFound('Can not find target resource')
   }
-  const isOperationPermitted = await canThis(requester, 'read', 'post', targetResource)
 
-  if (targetResource.get('status') !== 'published' && !isOperationPermitted) {
+  const permissionType = targetResource.get('status') === 'published' ? 'post' : 'unpublished_post'
+  const isOperationPermitted = await canThis(requester, 'read', permissionType, targetResource)
+
+  if (!isOperationPermitted) {
     throw new RecordNotFound('Can not find target resource')
   }
 
