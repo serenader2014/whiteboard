@@ -26,10 +26,10 @@
     "category": ["read"],
     "post": [{
       "name": "update",
-      "condition": "requester.id=resource.id"
+      "condition": "requester.id=resource.user_id"
     }, {
       "name": "read",
-      "condition": "requester.id=resource.id"
+      "condition": "requester.id=resource.user_id"
     }]
   },
   "guest": {

@@ -53,3 +53,17 @@ export async function update(requester, id, object) {
 
   return Post.update(targetResource, postObject, requester)
 }
+
+export async function get(requester, id) {
+  const targetResource = await Post.query({ id })
+  if (!targetResource) {
+    throw new RecordNotFound('Can not find target resource')
+  }
+  const isOperationPermitted = await canThis(requester, 'read', 'post', targetResource)
+
+  if (targetResource.get('status') !== 'published' && !isOperationPermitted) {
+    throw new RecordNotFound('Can not find target resource')
+  }
+
+  return targetResource
+}

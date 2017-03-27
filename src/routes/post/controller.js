@@ -1,7 +1,10 @@
 import _ from 'lodash'
 
-export async function getPost() {
+export async function getPost(ctx) {
+  const { id } = ctx.params
+  const post = await ctx.api.post.get(id)
 
+  ctx.body = post.json()
 }
 
 export async function listPost() {

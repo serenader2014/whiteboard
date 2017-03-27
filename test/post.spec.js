@@ -1,6 +1,6 @@
 // import supertest from 'supertest'
 
-import { login } from './utils'
+import { login, createPost } from './utils'
 
 describe('post api test', () => {
   it('try to create post', async () => {
@@ -43,6 +43,34 @@ describe('post api test', () => {
           if (err) return reject(err)
           res.status.should.equal(200)
           res.body.title.should.equal(newPostInfo.title)
+          resolve()
+        })
+    })
+  })
+
+  it('unpublished post can be reached by author', async () => {
+    const { agent, post } = await createPost('draft')
+
+    return new Promise((resolve, reject) => {
+      agent
+        .get(`/api/v1/posts/${post.id}`)
+        .end((err, res) => {
+          if (err) return reject(err)
+          res.status.should.equal(200)
+          resolve()
+        })
+    })
+  })
+
+  it('unpublished post can not be reached by other user', async () => {
+    const { post } = await createPost('draft')
+    const { agent } = await login(global.user)
+    return new Promise((resolve, reject) => {
+      agent
+        .get(`/api/v1/posts/${post.id}`)
+        .end((err, res) => {
+          if (err) return reject(err)
+          res.status.should.equal(404)
           resolve()
         })
     })

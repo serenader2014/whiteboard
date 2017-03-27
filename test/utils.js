@@ -99,6 +99,28 @@ export function createCategory() {
     })
 }
 
+export function createPost(status = 'published', category = global.categories[0].id) {
+  return login(global.admin)
+    .then(({ agent }) => {
+      const postInfo = {
+        title: 'this is a post created by test',
+        content: 'hello world, this is the post content',
+        status: status,
+        category_id: category
+      }
+
+      return new Promise((resolve, reject) => {
+        agent
+          .post('/api/v1/posts')
+          .send(postInfo)
+          .end((err, res) => {
+            if (err) return reject(err)
+            resolve({ agent, post: res.body })
+          })
+      })
+    })
+}
+
 export async function insertInitialData() {
   const User = require('../src/model/users').User
   const Role = require('../src/model/roles').Role

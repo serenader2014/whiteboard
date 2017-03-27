@@ -44,7 +44,7 @@
     "html": { "access": ["public"] },
     "featured": { "access": ["public"] },
     "slug": { "access": ["public"] },
-    "status": { "access": ["protected"] },
+    "status": { "access": ["public"] },
     "category_id": { "access": ["public"] },
     "user_id": { "access": ["public"] },
     "created_at": { "access": ["public"] },
