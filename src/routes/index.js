@@ -1,7 +1,7 @@
 import glob from 'glob'
 import Router from 'koa-router'
 
-import { plugins } from '../service/plugins'
+import plugins from '../service/plugins'
 
 export default function routes(app) {
   glob(`${__dirname}/*`, { ignore: '**/index.js' }, (err, matches) => {

@@ -75,7 +75,7 @@ export async function setUpPlugins() {
   }
 }
 
-export const plugins = (() => {
+const plugins = (() => {
   const list = []
   const hooksList = {}
   const routesList = []
@@ -139,7 +139,10 @@ export const plugins = (() => {
         helpers: {
           register(name, fn) {
             helpersList.push({
-              name: fn,
+              helper: {
+                name: name,
+                fn: fn
+              },
               plugin: plugin
             })
           }
@@ -170,3 +173,5 @@ export const plugins = (() => {
     }
   }
 })()
+
+export default plugins

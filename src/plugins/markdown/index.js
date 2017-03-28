@@ -26,11 +26,7 @@ export default function markdown(api) {
   })
 
   api.helpers.register('markdown_helper', function(str) {
-    return new Promise((resolve, reject) => {
-      setTimeout(() => {
-        resolve(md.render(str))
-      }, 5000)
-    })
+    return md.render(str)
   })
 }
 

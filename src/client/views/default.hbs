@@ -2,8 +2,12 @@
   <head>
     <title>{{title}}</title>
     {{{block "pageStyles"}}}
+    {{{inject_head}}}
   </head>
   <body>
-    {{{body}}} 
+    {{{inject_body}}}
+
+    {{{body}}}
+    {{{inject_foot}}}
   </body>
 </html>

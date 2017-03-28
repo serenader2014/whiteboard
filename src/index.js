@@ -12,11 +12,13 @@ import routes from './routes'
 import dbInit from './db/init'
 import setUpPassport from './service/passport'
 import { setUpPlugins } from './service/plugins'
+import { setUpHelpers } from './client/helpers'
 import { DBError } from './exceptions'
 
 export default async function() {
   await dbInit()
   await setUpPlugins()
+  await setUpHelpers()
   setUpPassport()
 
   const store = redisStore({ url: process.env.REDIS_URL })
@@ -40,8 +42,8 @@ export default async function() {
 
   app.use(api())
   app.use(view({
-    views: path.resolve(__dirname, 'views'),
-    partialsDir: path.resolve(__dirname, 'views', 'partials')
+    views: path.resolve(__dirname, 'client', 'views'),
+    partialsDir: path.resolve(__dirname, 'client', 'views', 'partials')
   }))
   routes(app)
 
