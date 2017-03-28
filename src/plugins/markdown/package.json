@@ -1,0 +1,14 @@
+{
+  "name": "whiteboard-plugin-markdown",
+  "version": "0.0.1",
+  "description": "A markdown plugin to transpile markdown into html",
+  "permissions": {
+    "post": ["preSave"]
+  },
+  "helpers": [],
+  "inject": [],
+  "routes": [],
+  "dependencies": {
+    "markdown-it": "^8.3.1"
+  }
+}

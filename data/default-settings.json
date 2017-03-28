@@ -6,4 +6,8 @@
   "type": "core",
   "key": "default_category",
   "value": "default"
+},{
+  "type": "core",
+  "key": "enabled_plugins",
+  "value": "[\"whiteboard-plugin-markdown\"]"
 }]

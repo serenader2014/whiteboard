@@ -2,6 +2,7 @@ import htmlToText from 'html-to-text'
 
 import bookshelf from '../db/bookshelf'
 import { Category, User, Slug } from './index'
+import { plugins } from '../service/plugins'
 
 import PostField from '../service/validator/post-field'
 
@@ -23,6 +24,7 @@ export class Post extends bookshelf.Model {
   }
 
   async onSaving(model, attrs, options) {
+    model = await plugins.triggerHook('post', 'preSave', model)
     await new PostField(model.attributes).execute()
 
     if (model.hasChanged('title')) {

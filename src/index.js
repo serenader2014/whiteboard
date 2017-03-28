@@ -10,10 +10,12 @@ import { catcher, responseTime, logger, api } from './middleware'
 import routes from './routes'
 import dbInit from './db/init'
 import setUpPassport from './service/passport'
+import { setUpPlugins } from './service/plugins'
 import { DBError } from './exceptions'
 
 export default async function() {
   await dbInit()
+  await setUpPlugins()
   setUpPassport()
 
   const store = redisStore({ url: process.env.REDIS_URL })
