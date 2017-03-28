@@ -4,6 +4,20 @@ import _ from 'lodash'
 import { Setting } from '../model'
 import { DBError } from '../exceptions'
 
+const modelList = ['post', 'category', 'role', 'setting', 'user']
+const actionList = [
+  'preCreate',
+  'postCreate',
+  'preUpdate',
+  'postUpdate',
+  'preSave',
+  'postSave',
+  'preDelete',
+  'postDelete',
+  'preRead',
+  'postRead'
+]
+
 async function listPlugins(forceUpdate = false) {
   if (global.avaliablePlugins && !forceUpdate) return global.avaliablePlugins
 
@@ -46,11 +60,11 @@ export async function setUpPlugins() {
       const plugin = avaliablePlugins[i]
       if (plugin) {
         try {
-          require(plugin.dir)
           plugins.set(plugin)
         } catch (e) {
+          console.log(e)
           // enabled, but not installed
-          console.log(`Plugin ${i} is not initialized, will skip it`)
+          console.log(`Setting plugin ${i} failed, will skip it`)
         }
       } else {
         console.log(`Can not find enabled plugin: ${i}, will skip it`)
@@ -63,30 +77,94 @@ export async function setUpPlugins() {
 
 export const plugins = (() => {
   const list = []
+  const hooksList = {}
+  const routesList = []
+  const injectsList = {
+    body: [],
+    head: [],
+    foot: []
+  }
+  const helpersList = []
+
+  for (const model of modelList) {
+    hooksList[model] = {}
+    for (const action of actionList) {
+      hooksList[model][action] = []
+    }
+  }
 
   return {
     get() {
       return list
     },
+    getHooksList() {
+      return hooksList
+    },
+    getRoutesList() {
+      return routesList
+    },
+    getInjectsList() {
+      return injectsList
+    },
+    getHelpersList() {
+      return helpersList
+    },
     set(plugin) {
       list.push(plugin)
-    },
-    // post preSave
-    getPluginsByPermission(scope, action) {
-      return list.filter(plugin => {
-        return plugin.pkg.permissions[scope] && _.includes(plugin.pkg.permissions[scope], action)
-      })
-    },
-    async triggerHook(scope, action, model) {
-      const p = this.getPluginsByPermission(scope, action)
-      for (const pluginObj of p) {
-        const plugin = require(pluginObj.dir)
-        if (plugin.config && plugin.config.hooks && plugin.config.hooks[scope] && plugin.config.hooks[scope][action]) {
-          const newAttribute = await plugin.config.hooks[scope][action](Object.assign({}, model.attributes))
-          for (const i of Object.keys(newAttribute)) {
-            model.set(i, newAttribute[i])
+      const pluginApi = {
+        hooks: {},
+        injects: {
+          register(object) {
+            const allowedLocation = ['body', 'head', 'foot']
+            const list = _.pick(object, allowedLocation)
+            for (const i of Object.keys(list)) {
+              injectsList[i].push({
+                fn: list[i],
+                plugin: plugin
+              })
+            }
+          }
+        },
+        routes: {
+          register(object) {
+            for (const route in object) {
+              routesList.push({
+                path: route,
+                handlers: object[route],
+                plugin: plugin
+              })
+            }
+          }
+        },
+        helpers: {
+          register(name, fn) {
+            helpersList.push({
+              name: fn,
+              plugin: plugin
+            })
+          }
+        },
+        model: {}
+      }
+
+      for (const model of modelList) {
+        pluginApi.hooks[model] = function(object) {
+          const list = _.pick(object, actionList)
+          for (const i of Object.keys(list)) {
+            hooksList[model][i].push(list[i])
           }
         }
+      }
+      require(plugin.dir).default(pluginApi)
+    },
+    async triggerHook(scope, action, model) {
+      const p = hooksList[scope][action]
+      let attributes = Object.assign({}, model.attributes)
+      for (const fn of p) {
+        attributes = await fn(attributes)
+      }
+      for (const i of Object.keys(attributes)) {
+        model.set(i, attributes[i])
       }
       return model
     }

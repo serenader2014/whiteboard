@@ -1,33 +1,36 @@
 import Markdown from 'markdown-it'
+import path from 'path'
 
 const md = new Markdown()
 
-export const config = {
-  hooks: {
-    post: {
-      preSave: function(postObject) {
-        postObject.html = md.render(postObject.content)
-        return postObject
-      }
+export default function markdown(api) {
+  api.hooks.post({
+    preSave: function(postObject) {
+      postObject.html = md.render(postObject.content)
+      return postObject
     }
-  },
-  routes: {
+  })
+
+  api.routes.register({
     '/settings': {
-      'get': function(ctx) {
-        ctx.body = {
-          message: 'hello world'
-        }
+      'get': async function(ctx) {
+        await ctx.render(path.resolve(__dirname, 'view.hbs'))
       }
     }
-  },
-  inject: {
+  })
+
+  api.injects.register({
     body: function() {
       return '<div>this is injected by markdown plugin</div>'
     }
-  },
-  helpers: {
-    'markdown_helper': function() {
+  })
 
-    }
-  }
+  api.helpers.register('markdown_helper', function(str) {
+    return new Promise((resolve, reject) => {
+      setTimeout(() => {
+        resolve(md.render(str))
+      }, 5000)
+    })
+  })
 }
+
