@@ -5,9 +5,9 @@
   "permissions": {
     "post": ["preSave"]
   },
-  "helpers": [],
-  "inject": [],
-  "routes": [],
+  "helpers": ["markdown_helper"],
+  "inject": ["foot", "head", "body"],
+  "routes": ["/settings"],
   "dependencies": {
     "markdown-it": "^8.3.1"
   }

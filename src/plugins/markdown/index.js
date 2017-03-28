@@ -10,5 +10,24 @@ export const config = {
         return postObject
       }
     }
+  },
+  routes: {
+    '/settings': {
+      'get': function(ctx) {
+        ctx.body = {
+          message: 'hello world'
+        }
+      }
+    }
+  },
+  inject: {
+    body: function() {
+      return '<div>this is injected by markdown plugin</div>'
+    }
+  },
+  helpers: {
+    'markdown_helper': function() {
+
+    }
   }
 }
