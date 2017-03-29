@@ -2,7 +2,7 @@ import htmlToText from 'html-to-text'
 
 import bookshelf from '../db/bookshelf'
 import { Category, User, Slug } from './index'
-import { plugins } from '../service/plugins'
+import plugins from '../service/plugins'
 
 import PostField from '../service/validator/post-field'
 
