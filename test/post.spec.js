@@ -133,7 +133,7 @@ describe('post api test', () => {
       .get('/api/v1/posts')
       .end((err, res) => {
         if (err) throw err
-        res.body.length.should.above(0)
+        res.body.data.length.should.above(0)
         done()
       })
   })
@@ -145,7 +145,20 @@ describe('post api test', () => {
         .get('/api/v1/posts/drafts')
         .end((err, res) => {
           if (err) return reject(err)
-          res.body.length.should.above(0)
+          res.body.data.length.should.above(0)
+          resolve()
+        })
+    })
+  })
+
+  it('admin list draft', async () => {
+    const { agent } = await login(global.admin)
+    return new Promise((resolve, reject) => {
+      agent
+        .get('/api/v1/posts/drafts')
+        .end((err, res) => {
+          if (err) return reject(err)
+          res.body.data.length.should.above(0)
           resolve()
         })
     })

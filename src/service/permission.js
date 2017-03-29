@@ -64,3 +64,38 @@ export async function canThis(requester, actionType, objectType, resource) {
   }
   return result
 }
+
+export async function generatePermissionQuery(requester, actionType, objectType) {
+  const permissions = await requester.permissions()
+  let result = []
+  for (let permission of permissions) {
+    if (permission.object_type === objectType && permission.action_type === actionType) {
+      if (permission.condition) {
+        const matchResult = permission.condition.match(expressionReg)
+        if (!matchResult) continue
+        const left = matchResult[1]
+        const condition = matchResult[2]
+        const right = matchResult[3]
+
+        let key
+        let value
+
+        const leftRequesterMatch = left.match(requesterPropertyReg)
+        const rightResourceMatch = right.match(resourcePropertyReg)
+
+        if (leftRequesterMatch) {
+          value = await requester[leftRequesterMatch[1]]
+        }
+
+        if (rightResourceMatch) {
+          key = rightResourceMatch[1]
+        }
+
+        result = [key, condition, value]
+      }
+      break
+    }
+  }
+
+  return result
+}

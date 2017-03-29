@@ -52,6 +52,8 @@
     "publish_at": { "access": ["public"] },
     "publish_by": { "access": ["public"] },
     "user": { "access": ["public"], "related_data": true },
-    "category": { "access": ["public"], "related_data": true }
+    "category": { "access": ["public"], "related_data": true },
+    "user_id": { "access": ["public"] },
+    "category_id": { "access": ["public"] }
   }
 }

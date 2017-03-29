@@ -1,5 +1,6 @@
 import bookshelf from 'bookshelf'
 import _ from 'lodash'
+import gql from 'ghost-gql'
 
 import knex from './connection'
 
@@ -39,6 +40,45 @@ blogBookshelf.Model = class Model extends blogBookshelf.Model {
     return this.forge()
     .query('where', queryObject)
     .fetch(options)
+  }
+
+  static async list(options, qbCallback = () => {}) {
+    const defaultOptions = {
+      filter: null,
+      order: '',
+      pageSize: 10,
+      page: 1,
+      include: null
+    }
+    options = _.pickBy({
+      ...defaultOptions,
+      ...options
+    }, value => !!value)
+
+    let filters = null
+    if (options.filter) {
+      filters = gql.parse(options.filter)
+    }
+    const fetchOptions = {
+      pageSize: options.pageSize,
+      page: options.page
+    }
+    if (options.include) {
+      fetchOptions.withRelated = _.filter(options.include.split(','), item => !!item)
+    }
+    const result = await this.forge().query(qb => {
+      if (filters) {
+        gql.knexify(qb, filters)
+      }
+      qbCallback(qb)
+    })
+    .orderBy(options.order)
+    .fetchPage(fetchOptions)
+
+    return {
+      pagination: result.pagination,
+      data: result.map(model => model.json())
+    }
   }
 
   static create(customFields, executor) {
@@ -117,10 +157,16 @@ blogBookshelf.Model = class Model extends blogBookshelf.Model {
         }
       }
 
-      const actualData = isRelatedData
-        ? this.related(key).json()
-        : this.attributes[key]
-      result[key] = allowed ? actualData : null
+      let data = null
+      if (allowed) {
+        if (isRelatedData) {
+          data = this.related(key).get('id') ? this.related(key).json() : {}
+        } else {
+          data = this.attributes[key]
+        }
+      }
+
+      result[key] = data
     })
     return result
   }

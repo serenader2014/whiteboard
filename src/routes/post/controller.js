@@ -2,15 +2,18 @@ import _ from 'lodash'
 
 export async function getPost(ctx) {
   const { id } = ctx.params
-  const post = await ctx.api.post.get(id)
+  const { include } = ctx.query
+  const post = await ctx.api.post.get(id, (include || '').split(','))
 
   ctx.body = post.json()
 }
 
 export async function listPost(ctx) {
-  const posts = await ctx.api.post.listPublishedPost()
+  const options = _.pick(ctx.query, ['pageSize', 'page', 'order', 'filter', 'include'])
 
-  ctx.body = posts.toJSON()
+  const posts = await ctx.api.post.listPublishedPost(options)
+
+  ctx.body = posts
 }
 
 export async function updatePost(ctx) {
@@ -38,5 +41,6 @@ export async function updateDraft() {
 }
 
 export async function listDraft(ctx) {
-  ctx.body = await ctx.api.post.listDraft()
+  const options = _.pick(ctx.query, ['pageSize', 'page', 'order', 'filter', 'include'])
+  ctx.body = await ctx.api.post.listDraft(options)
 }

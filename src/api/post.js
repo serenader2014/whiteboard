@@ -1,7 +1,7 @@
 import _ from 'lodash'
 
-import { Post, Posts } from '../model'
-import { canThis } from '../service/permission'
+import { Post } from '../model'
+import { canThis, generatePermissionQuery } from '../service/permission'
 import { OperationNotPermitted, RecordNotFound } from '../exceptions'
 
 export async function create(requester, object) {
@@ -54,8 +54,9 @@ export async function update(requester, id, object) {
   return Post.update(targetResource, postObject, requester)
 }
 
-export async function get(requester, id) {
-  const targetResource = await Post.query({ id }, { withRelated: ['user', 'category'] })
+export async function get(requester, id, include = []) {
+  const related = include.filter(item => ['user', 'category'].indexOf(item) !== -1)
+  const targetResource = await Post.query({ id }, { withRelated: related })
   if (!targetResource) {
     throw new RecordNotFound('Can not find target resource')
   }
@@ -70,21 +71,22 @@ export async function get(requester, id) {
   return targetResource
 }
 
-export async function listPublishedPost(requester) {
-  const posts = await Posts.query({ status: 'published' })
-
+export async function listPublishedPost(requester, options) {
+  const posts = await Post.list(options, qb => {
+    qb.where('status', '=', 'published')
+  })
   return posts
 }
 
-export async function listDraft(requester) {
-  const drafts = await Posts.query({ status: 'draft' })
-  const result = []
-  for (const i of drafts.models) {
-    const isOperationPermitted = await canThis(requester, 'read', 'unpublished_post', i)
-    if (isOperationPermitted) {
-      result.push(i)
-    }
-  }
+export async function listDraft(requester, options) {
+  const query = await generatePermissionQuery(requester, 'read', 'unpublished_post')
 
-  return result
+  const drafts = await Post.list(options, qb => {
+    qb.where('status', '=', 'draft')
+    if (query.length) {
+      qb.where.apply(qb, query)
+    }
+  })
+
+  return drafts
 }
