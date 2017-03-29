@@ -1,2 +1,6 @@
 <p>this is markdown plugin template</p>
 {{{markdown_helper '`console.log("hello world")`'}}}
+{{#each posts}}
+  <h1>{{title}}</h1>
+  <article>{{{html}}}</article>
+{{/each}}

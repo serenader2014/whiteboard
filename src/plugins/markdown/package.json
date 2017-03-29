@@ -3,13 +3,16 @@
   "version": "0.0.1",
   "description": "A markdown plugin to transpile markdown into html",
   "permissions": {
-    "hooks": {
-      "post": ["preSave"]
-    },
-    "helpers": ["markdown_helper"],
-    "inject": ["foot", "head", "body"],
-    "routes": ["/settings"]
+    "post": ["read"],
+    "user": ["read"],
+    "category": ["read"]
   },
+  "hooks": {
+    "post": ["preSave"]
+  },
+  "helpers": ["markdown_helper"],
+  "inject": ["foot", "head", "body"],
+  "routes": ["/settings"],
   "dependencies": {
     "markdown-it": "^8.3.1"
   }

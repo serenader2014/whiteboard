@@ -150,6 +150,35 @@ const plugins = (() => {
         model: {}
       }
 
+      const api = require('../api')
+
+      for (const model of Object.keys(api)) {
+        pluginApi.model[model] = {}
+        for (const method of Object.keys(api[model])) {
+          const fn = api[model][method]
+          const requester = {
+            async permissions() {
+              const { Permission } = require('../model')
+              const pluginPermissions = []
+
+              for (const object of Object.keys(plugin.pkg.permissions)) {
+                const actions = plugin.pkg.permissions[object]
+                for (const action of actions) {
+                  const permission = await Permission.query({object_type: object, action_type: action})
+                  if (permission) {
+                    pluginPermissions.push(permission.toJSON())
+                  }
+                }
+              }
+              return pluginPermissions
+            }
+          }
+          pluginApi.model[model][method] = (...args) => {
+            return fn.apply(api[model], [requester, ...args])
+          }
+        }
+      }
+
       for (const model of modelList) {
         pluginApi.hooks[model] = function(object) {
           const list = _.pick(object, actionList)
