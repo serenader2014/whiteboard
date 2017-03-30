@@ -93,8 +93,7 @@ export class User extends bookshelf.Model {
   }
 
   async permissions() {
-    const completeModel = await this.load(['roles'])
-    const roles = await completeModel.roles().fetch({ withRelated: 'permissions' })
+    const roles = await this.roles().fetch({ withRelated: 'permissions' })
     let permissions = []
 
     roles.each(role => {

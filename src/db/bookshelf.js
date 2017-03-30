@@ -42,7 +42,7 @@ blogBookshelf.Model = class Model extends blogBookshelf.Model {
     .fetch(options)
   }
 
-  static async list(options, qbCallback = () => {}) {
+  static async list(options, qbCallback = () => {}, validateFilter = filters => filters) {
     const defaultOptions = {
       filter: null,
       order: '',
@@ -57,7 +57,11 @@ blogBookshelf.Model = class Model extends blogBookshelf.Model {
 
     let filters = null
     if (options.filter) {
-      filters = gql.parse(options.filter)
+      try {
+        filters = validateFilter(gql.parse(options.filter))
+      } catch (e) {
+        console.log('parse filter error, will skip the filter', e)
+      }
     }
     const fetchOptions = {
       pageSize: options.pageSize,

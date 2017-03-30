@@ -74,6 +74,10 @@ export async function get(requester, id, include = []) {
 export async function listPublishedPost(requester, options) {
   const posts = await Post.list(options, qb => {
     qb.where('status', '=', 'published')
+  }, filters => {
+    const allowedFields = ['id', 'title', 'cover', 'excerpt', 'content', 'html', 'featured', 'slug', 'user_id', 'category_id']
+    filters.statements = filters.statements.filter(item => _.includes(allowedFields, item.prop))
+    return filters
   })
   return posts
 }
@@ -81,9 +85,13 @@ export async function listPublishedPost(requester, options) {
 export async function listDraft(requester, options) {
   const query = await generatePermissionQuery(requester, 'read', 'unpublished_post')
 
+  if (!query) {
+    throw new OperationNotPermitted('You dont have permission to list draft')
+  }
+
   const drafts = await Post.list(options, qb => {
     qb.where('status', '=', 'draft')
-    if (query.length) {
+    if (Array.isArray(query)) {
       qb.where.apply(qb, query)
     }
   })

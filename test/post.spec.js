@@ -145,7 +145,7 @@ describe('post api test', () => {
         .get('/api/v1/posts/drafts')
         .end((err, res) => {
           if (err) return reject(err)
-          res.body.data.length.should.above(0)
+          res.body.data.length.should.equal(3)
           resolve()
         })
     })
@@ -158,9 +158,56 @@ describe('post api test', () => {
         .get('/api/v1/posts/drafts')
         .end((err, res) => {
           if (err) return reject(err)
-          res.body.data.length.should.above(0)
+          res.body.data.length.should.equal(6)
           resolve()
         })
     })
+  })
+
+  it('list post with pagination', async function() {
+    this.timeout(5000)
+    await createPost('published')
+    await createPost('published')
+    await createPost('published')
+    await createPost('published')
+    await createPost('published')
+    return new Promise((resolve, reject) => {
+      supertest(baseUrl)
+        .get('/api/v1/posts')
+        .end((err, res) => {
+          if (err) return reject(err)
+          res.body.pagination.rowCount.should.equal(6)
+          supertest(baseUrl)
+            .get('/api/v1/posts?pageSize=5&page=2')
+            .end((err, res) => {
+              if (err) return reject(err)
+              res.body.data.length.should.equal(1)
+              resolve()
+            })
+        })
+    })
+  })
+
+  it('list post with relation data', done => {
+    supertest(baseUrl)
+      .get('/api/v1/posts?include=category')
+      .end((err, res) => {
+        if (err) throw err
+        res.body.data[0].category.id.should.not.equal(undefined)
+        supertest(baseUrl)
+          .get('/api/v1/posts?include=user')
+          .end((err, res) => {
+            if (err) throw err
+            res.body.data[0].user.id.should.not.equal(undefined)
+            supertest(baseUrl)
+              .get('/api/v1/posts?include=user,category')
+              .end((err, res) => {
+                if (err) throw err
+                res.body.data[0].category.id.should.not.equal(undefined)
+                res.body.data[0].user.id.should.not.equal(undefined)
+                done()
+              })
+          })
+      })
   })
 })

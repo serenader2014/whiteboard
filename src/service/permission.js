@@ -67,7 +67,7 @@ export async function canThis(requester, actionType, objectType, resource) {
 
 export async function generatePermissionQuery(requester, actionType, objectType) {
   const permissions = await requester.permissions()
-  let result = []
+  let result = false
   for (let permission of permissions) {
     if (permission.object_type === objectType && permission.action_type === actionType) {
       if (permission.condition) {
@@ -92,6 +92,8 @@ export async function generatePermissionQuery(requester, actionType, objectType)
         }
 
         result = [key, condition, value]
+      } else {
+        result = true
       }
       break
     }
