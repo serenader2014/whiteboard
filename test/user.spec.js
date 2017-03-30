@@ -372,4 +372,41 @@ describe('User api test', () => {
         })
     })
   })
+
+  it('guest get user list', done => {
+    supertest(baseUrl)
+      .get('/api/v1/users')
+      .end((err, res) => {
+        if (err) throw err
+        res.status.should.equal(401)
+        done()
+      })
+  })
+
+  it('common user get user list', async () => {
+    const { agent } = await login(global.user)
+    return new Promise((resolve, reject) => {
+      agent
+        .get('/api/v1/users')
+        .end((err, res) => {
+          if (err) return reject(err)
+          res.status.should.equal(403)
+          resolve()
+        })
+    })
+  })
+
+  it('admin get user list', async () => {
+    const { agent } = await login(global.admin)
+    return new Promise((resolve, reject) => {
+      agent
+        .get('/api/v1/users')
+        .end((err, res) => {
+          if (err) return reject(err)
+          res.status.should.equal(200)
+          res.body.pagination.rowCount.should.above(16)
+          resolve()
+        })
+    })
+  })
 })

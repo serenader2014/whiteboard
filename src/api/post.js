@@ -1,8 +1,17 @@
 import _ from 'lodash'
+import gql from 'ghost-gql'
 
 import { Post } from '../model'
 import { canThis, generatePermissionQuery } from '../service/permission'
 import { OperationNotPermitted, RecordNotFound } from '../exceptions'
+
+function validateFilters(filters) {
+  filters.statements = gql.json.rejectStatements(filters.statements, statement => {
+    const allowedFields = ['id', 'title', 'cover', 'excerpt', 'content', 'html', 'featured', 'slug', 'user_id', 'category_id']
+    return !_.includes(allowedFields, statement.prop)
+  })
+  return filters
+}
 
 export async function create(requester, object) {
   const isOperationPermitted = await canThis(requester, 'create', 'post')
@@ -61,7 +70,7 @@ export async function get(requester, id, include = []) {
     throw new RecordNotFound('Can not find target resource')
   }
 
-  const permissionType = targetResource.get('status') === 'published' ? 'post' : 'unpublished_post'
+  const permissionType = targetResource.get('status') === 'published' ? 'post' : 'draft'
   const isOperationPermitted = await canThis(requester, 'read', permissionType, targetResource)
 
   if (!isOperationPermitted) {
@@ -74,16 +83,12 @@ export async function get(requester, id, include = []) {
 export async function listPublishedPost(requester, options) {
   const posts = await Post.list(options, qb => {
     qb.where('status', '=', 'published')
-  }, filters => {
-    const allowedFields = ['id', 'title', 'cover', 'excerpt', 'content', 'html', 'featured', 'slug', 'user_id', 'category_id']
-    filters.statements = filters.statements.filter(item => _.includes(allowedFields, item.prop))
-    return filters
-  })
+  }, validateFilters)
   return posts
 }
 
 export async function listDraft(requester, options) {
-  const query = await generatePermissionQuery(requester, 'read', 'unpublished_post')
+  const query = await generatePermissionQuery(requester, 'read', 'draft')
 
   if (!query) {
     throw new OperationNotPermitted('You dont have permission to list draft')
@@ -94,7 +99,7 @@ export async function listDraft(requester, options) {
     if (Array.isArray(query)) {
       qb.where.apply(qb, query)
     }
-  })
+  }, validateFilters)
 
   return drafts
 }

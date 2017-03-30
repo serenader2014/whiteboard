@@ -66,7 +66,15 @@ export async function canThis(requester, actionType, objectType, resource) {
 }
 
 export async function generatePermissionQuery(requester, actionType, objectType) {
-  const permissions = await requester.permissions()
+  let permissions = []
+  if (requester === 'guest') {
+    const Guest = await Role.query({ name: 'guest' })
+    if (!Guest) throw new DBError('No guest role exist')
+
+    permissions = (await Guest.permissions().fetch()).toJSON()
+  } else {
+    permissions = await requester.permissions()
+  }
   let result = false
   for (let permission of permissions) {
     if (permission.object_type === objectType && permission.action_type === actionType) {

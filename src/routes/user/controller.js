@@ -1,3 +1,5 @@
+import _ from 'lodash'
+
 export async function createUser(ctx, next) {
   const { email, password } = ctx.request.body
 
@@ -60,7 +62,9 @@ export async function getUserRoles(ctx) {
 }
 
 export async function listUsers(ctx) {
-  ctx.body = await ctx.api.user.list()
+  const options = _.pick(ctx.query, ['pageSize', 'page', 'order', 'filter', 'include'])
+
+  ctx.body = await ctx.api.user.list(options)
 }
 
 export async function getUserInfoByEmail(ctx) {

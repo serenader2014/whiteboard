@@ -20,7 +20,7 @@ export const baseUrl = '/api/v1/users'
 export default {
   '/': [{
     method: 'GET',
-    handlers: [listUsers]
+    handlers: [requireAuthenticated(), listUsers]
   }, {
     method: 'POST',
     handlers: [requireAuthenticated(), createUser]

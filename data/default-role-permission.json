@@ -1,7 +1,9 @@
 {
   "admin": {
     "post": ["read", "create", "update", "delete"],
-    "unpublished_post": ["read", "create", "update", "delete"],
+    "draft": ["read", "create", "update", "delete"],
+    "deleted_post": ["read", "create", "update", "delete"],
+    "list_user": ["read"],
     "user": ["read", "create", "update", "delete"],
     "user.status": ["update"],
     "user.roles": ["read", "update"],
@@ -32,7 +34,7 @@
       "name": "read",
       "condition": "requester.id=resource.user_id"
     }, "create"],
-    "unpublished_post": [{
+    "draft": [{
       "name": "update",
       "condition": "requester.id=resource.user_id"
     }, {

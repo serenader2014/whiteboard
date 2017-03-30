@@ -59,6 +59,7 @@ blogBookshelf.Model = class Model extends blogBookshelf.Model {
     if (options.filter) {
       try {
         filters = validateFilter(gql.parse(options.filter))
+        console.log(filters)
       } catch (e) {
         console.log('parse filter error, will skip the filter', e)
       }
@@ -74,7 +75,7 @@ blogBookshelf.Model = class Model extends blogBookshelf.Model {
       if (filters) {
         gql.knexify(qb, filters)
       }
-      qbCallback(qb)
+      typeof qbCallback === 'function' && qbCallback(qb)
     })
     .orderBy(options.order)
     .fetchPage(fetchOptions)

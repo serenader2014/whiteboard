@@ -1,8 +1,19 @@
 import _ from 'lodash'
+import gql from 'ghost-gql'
 
-import { User, Users, Roles } from '../model'
+import { User, Roles } from '../model'
 import { OperationNotPermitted, BadPassword } from '../exceptions'
-import { canThis } from '../service/permission'
+import { canThis, generatePermissionQuery } from '../service/permission'
+
+function validateFilters(filters) {
+  filters.statements = gql.json.rejectStatements(filters.statements, statement => {
+    const allowedFields = ['id', 'username', 'slug', 'email', 'image', 'cover', 'bio', 'website', 'location', 'status', 'language', 'tour']
+
+    return !_.includes(allowedFields, statement.prop)
+  })
+
+  return filters
+}
 
 export async function create(requester, object) {
   const isOperationPermitted = await canThis(requester, 'create', 'user')
@@ -118,8 +129,12 @@ export async function changePassword(requester, id, oldPassword, newPassword) {
   return targetResource.save({ password: newPassword })
 }
 
-export async function list() {
-  const users = await Users.query()
+export async function list(requester, options) {
+  const query = await generatePermissionQuery(requester, 'read', 'list_user')
+  if (!query) {
+    throw new OperationNotPermitted('You dont have permission to list user')
+  }
+  const users = await User.list(options, null, validateFilters)
 
-  return users.toJSON()
+  return users
 }
