@@ -13,6 +13,8 @@ export async function canThis(requester, actionType, objectType, resource) {
     if (!Guest) throw new DBError('No guest role exist')
 
     permissions = (await Guest.permissions().fetch()).toJSON()
+  } else if (requester.context === 'internal') {
+    return true
   } else {
     permissions = await requester.permissions()
   }

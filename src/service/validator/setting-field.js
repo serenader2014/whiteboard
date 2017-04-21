@@ -9,7 +9,7 @@ export default class SettingField {
   execute() {
     const typeRules = ['required', function(value) {
       // currently only accept core setting
-      if (!_.includes(['core'], value)) {
+      if (!_.includes(['core', 'blog'], value)) {
         throw new Error(`Invalid setting type: ${value}`)
       }
     }]

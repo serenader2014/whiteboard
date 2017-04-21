@@ -10,4 +10,12 @@
   "type": "core",
   "key": "enabled_plugins",
   "value": "[\"whiteboard-plugin-markdown\"]"
+},{
+  "type": "blog",
+  "key": "title",
+  "value": "Whiteboard"
+},{
+  "type": "blog",
+  "key": "description",
+  "value": "Another blog platform"
 }]

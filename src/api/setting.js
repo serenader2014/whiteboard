@@ -10,10 +10,10 @@ export async function update(requester, id, option) {
   return await Setting.update(targetSetting, option)
 }
 
-export async function list(requester, options) {
+export async function listAll(requester, options) {
   const isOperationPermitted = await canThis(requester, 'read', 'setting')
   if (!isOperationPermitted) throw new OperationNotPermitted(`You dont have permission to read setting`)
-  return await Settings.query({})
+  return await Settings.query(options)
 }
 
 export async function get(requester, id) {

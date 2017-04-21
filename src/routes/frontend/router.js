@@ -1,10 +1,10 @@
-import { sayHi } from './controller'
+import { homePage } from './controller'
 
 export const baseUrl = '/'
 
 export default {
   '/': [{
     method: 'GET',
-    handlers: [sayHi]
+    handlers: [homePage]
   }]
 }

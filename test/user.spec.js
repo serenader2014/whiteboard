@@ -1,5 +1,4 @@
 import supertest from 'supertest'
-import { expect } from 'chai'
 
 import { generateUserInfo, createUser, login } from './utils'
 
@@ -101,21 +100,6 @@ describe('User api test', () => {
         .end((err, res) => {
           if (err) return reject(err)
           res.body.status.should.not.equal(null)
-          resolve()
-        })
-    })
-  })
-
-  it('common user get other user info', async () => {
-    const { response } = await createUser()
-    const { agent } = await login(global.user)
-
-    return new Promise((resolve, reject) => {
-      agent
-        .get(`/api/v1/users/${response.id}`)
-        .end((err, res) => {
-          if (err) return reject(err)
-          expect(res.body.status).to.equal(null)
           resolve()
         })
     })
@@ -404,7 +388,7 @@ describe('User api test', () => {
         .end((err, res) => {
           if (err) return reject(err)
           res.status.should.equal(200)
-          res.body.pagination.rowCount.should.above(16)
+          res.body.meta.rowCount.should.above(16)
           resolve()
         })
     })

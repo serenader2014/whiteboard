@@ -176,7 +176,7 @@ describe('post api test', () => {
         .get('/api/v1/posts')
         .end((err, res) => {
           if (err) return reject(err)
-          res.body.pagination.rowCount.should.equal(6)
+          res.body.meta.rowCount.should.equal(6)
           supertest(baseUrl)
             .get('/api/v1/posts?pageSize=5&page=2')
             .end((err, res) => {

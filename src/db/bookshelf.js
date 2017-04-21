@@ -42,12 +42,12 @@ blogBookshelf.Model = class Model extends blogBookshelf.Model {
     .fetch(options)
   }
 
-  static async list(options, qbCallback = () => {}, validateFilter = filters => filters) {
+  static async list(options, qbCallback = () => {}, filtersFn = {}) {
     const defaultOptions = {
       filter: null,
       order: '',
-      pageSize: 10,
-      page: 1,
+      pageSize: '10',
+      page: '1',
       include: null
     }
     options = _.pickBy({
@@ -55,11 +55,14 @@ blogBookshelf.Model = class Model extends blogBookshelf.Model {
       ...options
     }, value => !!value)
 
+    filtersFn.validateFilter = filtersFn.validateFilter || (filter => filter)
+    filtersFn.validateInclude = filtersFn.validateInclude || (include => include)
+    filtersFn.validateOrder = filtersFn.validateOrder || (order => order)
+
     let filters = null
     if (options.filter) {
       try {
-        filters = validateFilter(gql.parse(options.filter))
-        console.log(filters)
+        filters = filtersFn.validateFilter(gql.parse(options.filter))
       } catch (e) {
         console.log('parse filter error, will skip the filter', e)
       }
@@ -69,20 +72,26 @@ blogBookshelf.Model = class Model extends blogBookshelf.Model {
       page: options.page
     }
     if (options.include) {
-      fetchOptions.withRelated = _.filter(options.include.split(','), item => !!item)
+      fetchOptions.withRelated = filtersFn.validateInclude(_.filter(options.include.split(','), item => !!item))
     }
+    const order = filtersFn.validateOrder(options.order)
+
     const result = await this.forge().query(qb => {
       if (filters) {
         gql.knexify(qb, filters)
       }
       typeof qbCallback === 'function' && qbCallback(qb)
     })
-    .orderBy(options.order)
+    .orderBy(order)
     .fetchPage(fetchOptions)
 
     return {
-      pagination: result.pagination,
-      data: result.map(model => model.json())
+      data: result.map(model => model.json()),
+      meta: {
+        ...result.pagination,
+        order,
+        filters
+      }
     }
   }
 
@@ -134,7 +143,7 @@ blogBookshelf.Model = class Model extends blogBookshelf.Model {
     return result
   }
 
-  json(isPermitted) {
+  json() {
     const tableName = this.tableName
     const structure = resourceStructure[tableName]
     const result = {}
@@ -144,31 +153,14 @@ blogBookshelf.Model = class Model extends blogBookshelf.Model {
     }
     Object.keys(structure).forEach((key) => {
       const option = structure[key]
-      const accessControl = option.access
       const isRelatedData = option.related_data
-      let allowed = false
-
-      for (const i of accessControl) {
-        if (i === 'public') {
-          allowed = true
-        }
-
-        if (i === 'protected' && isPermitted) {
-          allowed = true
-        }
-
-        if (allowed) {
-          break
-        }
-      }
 
       let data = null
-      if (allowed) {
-        if (isRelatedData) {
-          data = this.related(key).get('id') ? this.related(key).json() : {}
-        } else {
-          data = this.attributes[key]
-        }
+
+      if (isRelatedData) {
+        data = this.related(key).get('id') ? this.related(key).json() : {}
+      } else {
+        data = this.attributes[key]
       }
 
       result[key] = data

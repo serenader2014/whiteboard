@@ -13,6 +13,20 @@ function validateFilters(filters) {
   return filters
 }
 
+function validateInclude(include) {
+  const allowedData = ['user', 'category']
+  return include.filter(item => _.includes(allowedData, item))
+}
+
+function validateOrder(order) {
+  const allowedFields = ['id', 'featured', 'created_at', 'created_by', 'updated_at', 'updated_by', 'publish_at', 'publish_by', 'user_id', 'category_id']
+  if (_.includes(allowedFields, order)) {
+    return order
+  } else {
+    return 'created_at'
+  }
+}
+
 export async function create(requester, object) {
   const isOperationPermitted = await canThis(requester, 'create', 'post')
   if (!isOperationPermitted) throw new OperationNotPermitted(`You dont have permission to create post`)
@@ -83,7 +97,7 @@ export async function get(requester, id, include = []) {
 export async function listPublishedPost(requester, options) {
   const posts = await Post.list(options, qb => {
     qb.where('status', '=', 'published')
-  }, validateFilters)
+  }, { validateFilters, validateInclude, validateOrder })
   return posts
 }
 
@@ -99,7 +113,7 @@ export async function listDraft(requester, options) {
     if (Array.isArray(query)) {
       qb.where.apply(qb, query)
     }
-  }, validateFilters)
+  }, { validateFilters, validateInclude, validateOrder })
 
   return drafts
 }

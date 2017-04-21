@@ -1,5 +1,5 @@
 export async function listSettings(ctx) {
-  const settings = await ctx.api.setting.list()
+  const settings = await ctx.api.setting.listAll()
   ctx.body = settings.toJSON()
 }
 
