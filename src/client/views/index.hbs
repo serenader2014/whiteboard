@@ -10,3 +10,10 @@
  
 <h1>{{settings.title}}</h1>
 <h3>{{settings.description}}</h3>
+
+{{#each posts}}
+<h1>{{title}}</h1>
+<p>{{excerpt}}</p>
+{{/each}}
+
+<p>总共{{pagination.totalPage}}页，当前第{{pagination.page}}页</p>

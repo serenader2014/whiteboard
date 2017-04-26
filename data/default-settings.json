@@ -18,4 +18,8 @@
   "type": "blog",
   "key": "description",
   "value": "Another blog platform"
+},{
+  "type": "blog",
+  "key": "post_per_page",
+  "value": 5
 }]
