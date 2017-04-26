@@ -86,6 +86,7 @@ export default {
     cover: { type: text, maxlength: 2000, nullable: true },
     excerpt: { type: text, maxLength: 500, nullable: true },
     content: { type: text, maxLength: 1000000000, nullable: true },
+    original_id: { type: int, nullable: true },
     html: { type: text, maxLength: 1000000000, nullable: true },
     featured: { type: boolean, nullable: false, defaultTo: 'false' },
     slug: { type: str, maxlength: 150, nullable: false, unique: true },

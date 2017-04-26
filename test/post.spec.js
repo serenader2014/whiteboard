@@ -1,6 +1,6 @@
 import supertest from 'supertest'
 
-import { login, createPost } from './utils'
+import { login, createPost, getRandomPost } from './utils'
 const baseUrl = `http://localhost:${process.env.APP_PORT}`
 
 describe('post api test', () => {
@@ -27,7 +27,7 @@ describe('post api test', () => {
 
   it('try to update post', async () => {
     const { agent } = await login(global.admin)
-    const targetPost = global.posts[0]
+    const targetPost = await getRandomPost({ status: 'published' })
     const newPostInfo = {
       title: 'updated post title',
       content: 'hello world, this is updated content',
@@ -209,5 +209,33 @@ describe('post api test', () => {
               })
           })
       })
+  })
+
+  it('create a post draft', async () => {
+    const targetPost = await getRandomPost({ status: 'published' })
+    const { agent } = await login(global.admin)
+    const draft = Object.assign({}, targetPost, {
+      title: targetPost.title + '_updated_at_' + new Date().getTime(),
+      content: targetPost.content + '\nupdated_at_' + new Date().getTime(),
+      featured: false
+    })
+
+    return new Promise((resolve, reject) => {
+      agent
+        .post(`/api/v1/posts/${targetPost.id}/drafts`)
+        .send(draft)
+        .end((err, res) => {
+          if (err) return reject(err)
+          res.status.should.equal(200)
+          agent
+            .get(`/api/v1/posts/${targetPost.id}/drafts`)
+            .end((err, res) => {
+              if (err) return reject(err)
+              res.status.should.equal(200)
+              res.body.meta.rowCount.should.equal(1)
+              resolve()
+            })
+        })
+    })
   })
 })

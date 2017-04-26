@@ -99,26 +99,51 @@ export function createCategory() {
     })
 }
 
-export function createPost(status = 'published', category = global.categories[0].id, user = global.admin) {
-  return login(user)
-    .then(({ agent }) => {
-      const postInfo = {
-        title: 'this is a post created by test',
-        content: 'hello world, this is the post content',
-        status: status,
-        category_id: category
-      }
-
-      return new Promise((resolve, reject) => {
-        agent
-          .post('/api/v1/posts')
-          .send(postInfo)
-          .end((err, res) => {
-            if (err) return reject(err)
-            resolve({ agent, post: res.body })
-          })
+export async function createPost(status = 'published', category, user = global.admin) {
+  if (!category) {
+    category = (await getRandomCategory()).id
+  }
+  const { agent } = await login(user)
+  const postInfo = {
+    title: 'this is a post created by test',
+    content: 'hello world, this is the post content',
+    status: status,
+    category_id: category
+  }
+  return new Promise((resolve, reject) => {
+    agent
+      .post('/api/v1/posts')
+      .send(postInfo)
+      .end((err, res) => {
+        if (err) return reject(err)
+        resolve({ agent, post: res.body })
       })
-    })
+  })
+}
+
+function random(collections) {
+  const data = collections.toJSON()
+  const num = Math.round(Math.random() * (data.length - 1))
+  return data[num]
+}
+
+export async function getRandomCategory(options) {
+  const Categories = require('../src/model/categories').Categories
+
+  const categories = await Categories.query(options)
+  return random(categories)
+}
+
+export async function getRandomPost(options) {
+  const Posts = require('../src/model/posts').Posts
+  const posts = await Posts.query(options)
+  return random(posts)
+}
+
+export async function getRandomUser(options) {
+  const Users = require('../src/model/users').Users
+  const users = await Users.query(options)
+  return random(users)
 }
 
 export async function insertInitialData() {

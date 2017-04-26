@@ -11,7 +11,7 @@ export async function getPost(ctx) {
 export async function listPost(ctx) {
   const options = _.pick(ctx.query, ['pageSize', 'page', 'order', 'filter', 'include'])
 
-  const posts = await ctx.api.post.listPublishedPost(options)
+  const posts = await ctx.api.post.listPublishedPosts(options)
 
   ctx.body = posts
 }
@@ -20,7 +20,7 @@ export async function updatePost(ctx) {
   const { id } = ctx.params
   const post = await ctx.api.post.update(id, ctx.request.body)
 
-  ctx.body = post.json(true)
+  ctx.body = post.json()
 }
 
 export async function createPost(ctx) {
@@ -29,11 +29,18 @@ export async function createPost(ctx) {
   })
   const post = await ctx.api.post.create(postObject)
 
-  ctx.body = post.json(true)
+  ctx.body = post.json()
 }
 
-export async function createDraft() {
+export async function createDraft(ctx) {
+  const originalId = ctx.params.id
+  const postObject = _.extend({}, ctx.request.body, {
+    user_id: ctx.state.user.id
+  })
 
+  const draft = await ctx.api.post.createPostDraft(originalId, postObject)
+
+  ctx.body = draft.json()
 }
 
 export async function updateDraft() {
@@ -42,5 +49,11 @@ export async function updateDraft() {
 
 export async function listDraft(ctx) {
   const options = _.pick(ctx.query, ['pageSize', 'page', 'order', 'filter', 'include'])
-  ctx.body = await ctx.api.post.listDraft(options)
+  ctx.body = await ctx.api.post.listDrafts(options)
+}
+
+export async function getPostDraft(ctx) {
+  const { id } = ctx.params
+  const options = _.pick(ctx.query, ['pageSize', 'page', 'order', 'filter', 'include'])
+  ctx.body = await ctx.api.post.listPostDrafts(id, options)
 }
