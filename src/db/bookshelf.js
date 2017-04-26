@@ -36,9 +36,10 @@ blogBookshelf.Model = class Model extends blogBookshelf.Model {
     })
   }
 
-  static query(queryObject = {}, options) {
+  static query(queryObject = {}, options, orderBy = 'id') {
     return this.forge()
     .query('where', queryObject)
+    .orderBy(orderBy)
     .fetch(options)
   }
 
@@ -182,9 +183,10 @@ blogBookshelf.Collection = class Collection extends blogBookshelf.Collection {
     })
   }
 
-  static query(queryObject = {}, options) {
+  static query(queryObject = {}, options, orderBy = 'id') {
     return this.forge()
     .query('where', queryObject)
+    .orderBy(orderBy)
     .fetch(options)
   }
 }

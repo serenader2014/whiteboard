@@ -43,8 +43,10 @@ export async function createDraft(ctx) {
   ctx.body = draft.json()
 }
 
-export async function updateDraft() {
-
+export async function updateDraft(ctx) {
+  const { id } = ctx.params
+  const draft = await ctx.api.post.updatePostDraft(id, ctx.request.body)
+  ctx.body = draft.json()
 }
 
 export async function listDraft(ctx) {

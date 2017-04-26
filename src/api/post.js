@@ -166,8 +166,7 @@ export async function listPostDrafts(requester, id, options) {
 export async function updatePostDraft(requester, id, object) {
   const isOperationPermitted = await canThis(requester, 'update', 'draft')
   if (!isOperationPermitted) throw new OperationNotPermitted(`You dont have permission to update draft`)
-  const targetResource = await Post.query({ original_id: id }, { order: '-created_at' })
-  console.log(targetResource)
+  const targetResource = await Post.query({ original_id: id }, null, '-created_at')
   if (!targetResource) throw new RecordNotFound('Can not find target resource')
 
   const allowedFields = [

@@ -1,6 +1,6 @@
 import supertest from 'supertest'
 
-import { login, createPost, getRandomPost } from './utils'
+import { login, createPost, getRandomPost, createPostDraft } from './utils'
 const baseUrl = `http://localhost:${process.env.APP_PORT}`
 
 describe('post api test', () => {
@@ -233,6 +233,53 @@ describe('post api test', () => {
               if (err) return reject(err)
               res.status.should.equal(200)
               res.body.meta.rowCount.should.equal(1)
+              resolve()
+            })
+        })
+    })
+  })
+
+  it('list a post draft', async () => {
+    const { agent, post } = await createPost('published')
+    await createPostDraft(post.id)
+    await createPostDraft(post.id)
+    await createPostDraft(post.id)
+
+    return new Promise((resolve, reject) => {
+      agent
+        .get(`/api/v1/posts/${post.id}/drafts`)
+        .end((err, res) => {
+          if (err) return reject(err)
+          res.status.should.equal(200)
+          res.body.meta.rowCount.should.equal(3)
+          resolve()
+        })
+    })
+  })
+
+  it('update a post draft', async () => {
+    const { agent, post } = await createPost('published')
+    await createPostDraft(post.id)
+    await createPostDraft(post.id)
+    await createPostDraft(post.id)
+    const newDraftInfo = {
+      title: 'updated draft title',
+      content: 'updated draft content',
+      featured: false
+    }
+
+    return new Promise((resolve, reject) => {
+      agent
+        .put(`/api/v1/posts/${post.id}/drafts`)
+        .send(newDraftInfo)
+        .end((err, res) => {
+          if (err) return reject(err)
+          res.status.should.equal(200)
+          agent
+            .get(`/api/v1/posts/${post.id}/drafts`)
+            .end((err, res) => {
+              if (err) return reject(err)
+              res.body.data[2].title.should.equal(newDraftInfo.title)
               resolve()
             })
         })

@@ -121,6 +121,25 @@ export async function createPost(status = 'published', category, user = global.a
   })
 }
 
+export async function createPostDraft(id) {
+  const category = await getRandomCategory()
+  const draftInfo = {
+    title: 'draft title',
+    content: 'draft content',
+    category_id: category.id
+  }
+  const { agent } = await login(global.admin)
+  return new Promise((resolve, reject) => {
+    agent
+      .post(`/api/v1/posts/${id}/drafts`)
+      .send(draftInfo)
+      .end((err, res) => {
+        if (err) return reject(err)
+        resolve({ agent, draft: res.body })
+      })
+  })
+}
+
 function random(collections) {
   const data = collections.toJSON()
   const num = Math.round(Math.random() * (data.length - 1))
