@@ -11,7 +11,8 @@ export function view(options) {
         settings: {
           ...options
         },
-        ...data
+        ...data,
+        blog: ctx.locals.blogSettings
       }
       const file = path.resolve(options.views, filename)
       return new Promise((resolve, reject) => {

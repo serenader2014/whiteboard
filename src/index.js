@@ -14,6 +14,7 @@ import setUpPassport from './service/passport'
 import { setUpPlugins } from './service/plugins'
 import { setUpHelpers } from './client/helpers'
 import { DBError } from './exceptions'
+import saveGlobalDataToApp from './utils/save-global-data-to-app'
 
 export default async function() {
   await dbInit()
@@ -50,4 +51,5 @@ export default async function() {
   app.listen(process.env.APP_PORT, () => console.log(`Server started on ${process.env.APP_PORT}`))
 
   app.on('error', e => console.log('error:' + e.message))
+  saveGlobalDataToApp(app)
 }
