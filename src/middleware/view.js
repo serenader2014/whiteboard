@@ -12,7 +12,8 @@ export function view(options) {
           ...options
         },
         ...data,
-        blog: ctx.locals.blogSettings
+        blog: ctx.locals.blogSettings,
+        router: ctx.locals.router
       }
       const file = path.resolve(options.views, filename)
       return new Promise((resolve, reject) => {

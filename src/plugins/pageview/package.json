@@ -1,0 +1,12 @@
+{
+  "name": "whiteboard-plugin-pageview",
+  "version": "0.0.1",
+  "description": "A pageview plugin to track post pageview",
+  "hooks": {
+    "post": ["postRead"]
+  },
+  "database": {
+    "redis": ["read", "write"]
+  },
+  "routes": ["/settings"]
+}

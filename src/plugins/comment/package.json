@@ -1,0 +1,10 @@
+{
+  "name": "whiteboard-plugin-comment",
+  "version": "0.0.1",
+  "description": "A comment plugin for blogging platform",
+  "helpers": ["comment"],
+  "database": {
+    "mysql": ["read", "write"]
+  },
+  "routes": ["/settings"]
+}

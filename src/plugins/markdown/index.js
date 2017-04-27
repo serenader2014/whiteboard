@@ -14,9 +14,9 @@ export default function markdown(api) {
   api.routes.register({
     '/settings': {
       'get': async function(ctx) {
-        const posts = await api.model.post.listPublishedPost()
+        const posts = await api.model.post.listPublishedPosts()
         await ctx.render(path.resolve(__dirname, 'view.hbs'), {
-          posts: posts.toJSON()
+          posts: posts.data
         })
       }
     }
@@ -28,7 +28,7 @@ export default function markdown(api) {
     }
   })
 
-  api.helpers.register('markdown_helper', function(str) {
+  api.helpers.register('markdown_helper', function(str, locals) {
     return md.render(str)
   })
 }
