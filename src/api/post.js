@@ -95,9 +95,12 @@ export async function get(requester, id, include = []) {
   return targetResource
 }
 
-export async function listPublishedPosts(requester, options) {
+export async function listPublishedPosts(requester, options, channel) {
   const posts = await Post.list(options, qb => {
     qb.where('status', '=', 'published')
+    if (channel && channel !== 'all') {
+      qb.whereIn('category_id', channel)
+    }
   }, { validateFilters, validateInclude, validateOrder })
   return posts
 }

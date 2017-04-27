@@ -19,7 +19,11 @@
   "key": "description",
   "value": "Another blog platform"
 },{
-  "type": "blog",
+  "type": "core",
   "key": "post_per_page",
   "value": 5
+},{
+  "type": "core",
+  "key": "home_page_channel",
+  "value": "all"
 }]
