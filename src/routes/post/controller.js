@@ -3,7 +3,7 @@ import _ from 'lodash'
 export async function getPost(ctx) {
   const { id } = ctx.params
   const { include } = ctx.query
-  const post = await ctx.api.post.get(id, (include || '').split(','))
+  const post = await ctx.api.post.get({ id }, (include || '').split(','))
 
   ctx.body = post.json()
 }

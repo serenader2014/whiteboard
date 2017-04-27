@@ -78,9 +78,9 @@ export async function update(requester, id, object) {
   return Post.update(targetResource, postObject, requester)
 }
 
-export async function get(requester, id, include = []) {
+export async function get(requester, obj, include = []) {
   const related = include.filter(item => ['user', 'category'].indexOf(item) !== -1)
-  const targetResource = await Post.query({ id }, { withRelated: related })
+  const targetResource = await Post.query(obj, { withRelated: related })
   if (!targetResource) {
     throw new RecordNotFound('Can not find target resource')
   }

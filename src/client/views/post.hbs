@@ -1,0 +1,16 @@
+{{!< default}}
+ 
+{{#contentFor 'pageStyles'}}
+<style>
+  .clicker {
+    color: blue;
+  };
+</style>
+{{/contentFor}}
+ 
+<h1>{{settings.title}}</h1>
+<h3>{{settings.description}}</h3>
+
+<h2>{{post.title}}</h2>
+
+<article>{{{post.html}}}</article>

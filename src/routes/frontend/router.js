@@ -1,10 +1,18 @@
-import { homePage } from './controller'
+import { mainChannel, postDetail } from './controller'
 
-export const baseUrl = '/'
+export const baseUrl = ''
 
 export default {
   '/': [{
     method: 'GET',
-    handlers: [homePage]
+    handlers: [mainChannel]
+  }],
+  '/page/:page': [{
+    method: 'GET',
+    handlers: [mainChannel]
+  }],
+  '/post/:slug': [{
+    method: 'GET',
+    handlers: [postDetail]
   }]
 }
