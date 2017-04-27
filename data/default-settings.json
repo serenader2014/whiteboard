@@ -9,7 +9,7 @@
 },{
   "type": "core",
   "key": "enabled_plugins",
-  "value": "[\"whiteboard-plugin-markdown\"]"
+  "value": "[\"whiteboard-plugin-markdown\", \"whiteboard-plugin-pageview\"]"
 },{
   "type": "blog",
   "key": "title",

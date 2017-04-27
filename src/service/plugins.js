@@ -1,8 +1,14 @@
 import path from 'path'
 import _ from 'lodash'
+import redis from 'redis'
 
 import { Setting } from '../model'
 import { DBError } from '../exceptions'
+
+Promise.promisifyAll(redis.RedisClient.prototype)
+Promise.promisifyAll(redis.Multi.prototype)
+
+const redisClient = redis.createClient({ url: process.env.REDIS_URL })
 
 const modelList = ['post', 'category', 'role', 'setting', 'user']
 const actionList = [
@@ -147,7 +153,27 @@ const plugins = (() => {
             })
           }
         },
-        model: {}
+        model: {},
+        database: {
+          redis: {
+            get() {
+              const key = `plugin_data_${plugin.pkg.name}`
+              return redisClient.getAsync(key)
+            },
+            set(value) {
+              const key = `plugin_data_${plugin.pkg.name}`
+              return redisClient.setAsync(key, value)
+            }
+          },
+          mysql: {
+            read() {
+
+            },
+            save() {
+
+            }
+          }
+        }
       }
 
       const api = require('../api')
