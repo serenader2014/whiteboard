@@ -155,23 +155,13 @@ const plugins = (() => {
         },
         model: {},
         database: {
-          redis: {
-            get() {
-              const key = `plugin_data_${plugin.pkg.name}`
-              return redisClient.getAsync(key)
-            },
-            set(value) {
-              const key = `plugin_data_${plugin.pkg.name}`
-              return redisClient.setAsync(key, value)
-            }
+          get() {
+            const key = `plugin_data_${plugin.pkg.name}`
+            return redisClient.getAsync(key)
           },
-          mysql: {
-            read() {
-
-            },
-            save() {
-
-            }
+          set(value) {
+            const key = `plugin_data_${plugin.pkg.name}`
+            return redisClient.setAsync(key, value)
           }
         }
       }
