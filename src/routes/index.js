@@ -1,10 +1,23 @@
 import glob from 'glob'
 import Router from 'koa-router'
 import _ from 'lodash'
+import path from 'path'
+import send from 'koa-send'
 
 import plugins from '../service/plugins'
 
 export default function routes(app) {
+  const apiRouter = new Router()
+  apiRouter.all(/^\/api\/v1(?:\/|$)/, async function(ctx, next) {
+    ctx.set('Access-Control-Allow-Origin', '*')
+    if (ctx.method === 'OPTIONS') {
+      ctx.body = 'ok'
+    }
+    await next()
+  })
+
+  app.use(apiRouter.routes())
+
   glob(`${__dirname}/*`, { ignore: '**/index.js' }, (err, matches) => {
     if (err) throw err
     const instance = new Router()
@@ -26,7 +39,7 @@ export default function routes(app) {
           const lastHandler = handlers.pop()
           async function saveRouterInfoToCtx(ctx, next) {
             ctx.locals.router = {
-              ..._.pick(ctx.request, ['method', 'url', 'headers']),
+              ..._.pick(ctx.request, ['method', 'url', 'headers', 'ip']),
               name
             }
             await next()
@@ -53,4 +66,17 @@ export default function routes(app) {
       app.use(instance.allowedMethods())
     }
   }
+
+  const adminRouter = new Router()
+  adminRouter.all(/^\/admin(?:\/|$)/, async function(ctx) {
+    const clientBaseDir = path.join(__dirname, '../../client/dist')
+    if (path.extname(ctx.path)) {
+      // requesting an static assets(javascript files or css file or html file)
+      await send(ctx, ctx.path, { root: clientBaseDir })
+    } else {
+      await send(ctx, 'index.html', { root: clientBaseDir })
+    }
+  })
+
+  app.use(adminRouter.routes())
 }
