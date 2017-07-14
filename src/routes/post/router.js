@@ -7,7 +7,8 @@ import {
   listDraft,
   createDraft,
   updateDraft,
-  getPostDraft
+  getPostDraft,
+  listEditablePosts
 } from './controller'
 
 export const baseUrl = '/api/v1/posts'
@@ -23,6 +24,10 @@ export default {
   '/drafts': [{
     method: 'GET',
     handlers: [requireAuthenticated(), listDraft]
+  }],
+  '/editable': [{
+    method: 'GET',
+    handlers: [requireAuthenticated(), listEditablePosts]
   }],
   '/:id': [{
     method: 'GET',

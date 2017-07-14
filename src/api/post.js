@@ -105,6 +105,31 @@ export async function listPublishedPosts(requester, options, channel) {
   return posts
 }
 
+export async function listEditablePosts(requester, options) {
+  const postQuery = await generatePermissionQuery(requester, 'update', 'post')
+  const draftQuery = await generatePermissionQuery(requester, 'update', 'draft')
+
+  if (!postQuery && !draftQuery) {
+    throw new OperationNotPermitted('You dont have permission to list editable posts')
+  }
+
+  const posts = await Post.list(options, qb => {
+    qb.where({
+      original_id: null
+    }).whereIn('status', ['published', 'draft'])
+
+    if (Array.isArray(postQuery)) {
+      qb.where.apply(qb, postQuery)
+    }
+
+    if (Array.isArray(draftQuery)) {
+      qb.where.apply(qb, draftQuery)
+    }
+  }, { validateFilters, validateInclude, validateOrder }, { extraAttributes: 'status' })
+
+  return posts
+}
+
 export async function listDrafts(requester, options) {
   const query = await generatePermissionQuery(requester, 'read', 'draft')
 

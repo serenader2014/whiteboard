@@ -43,7 +43,7 @@ blogBookshelf.Model = class Model extends blogBookshelf.Model {
     .fetch(options)
   }
 
-  static async list(options, qbCallback = () => {}, filtersFn = {}) {
+  static async list(options, qbCallback = () => {}, filtersFn = {}, additionalOptions = {}) {
     const defaultOptions = {
       filter: null,
       order: '',
@@ -82,12 +82,14 @@ blogBookshelf.Model = class Model extends blogBookshelf.Model {
         gql.knexify(qb, filters)
       }
       typeof qbCallback === 'function' && qbCallback(qb)
+
+      console.log(qb.toString())
     })
     .orderBy(order)
     .fetchPage(fetchOptions)
 
     return {
-      data: result.map(model => model.json()),
+      data: result.map(model => model.json({ extraAttributes: additionalOptions.extraAttributes })),
       meta: {
         ...result.pagination,
         order,
@@ -144,7 +146,7 @@ blogBookshelf.Model = class Model extends blogBookshelf.Model {
     return result
   }
 
-  json() {
+  json(options = {}) {
     const tableName = this.tableName
     const structure = resourceStructure[tableName]
     const result = {}
@@ -166,6 +168,9 @@ blogBookshelf.Model = class Model extends blogBookshelf.Model {
 
       result[key] = data
     })
+    if (options.extraAttributes) {
+      _.extend(result, _.pick(this.attributes, options.extraAttributes))
+    }
     return result
   }
 }

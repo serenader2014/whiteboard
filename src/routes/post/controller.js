@@ -16,6 +16,14 @@ export async function listPost(ctx) {
   ctx.body = posts
 }
 
+export async function listEditablePosts(ctx) {
+  const options = _.pick(ctx.query, ['pageSize', 'page', 'order', 'filter', 'include'])
+
+  const posts = await ctx.api.post.listEditablePosts(options)
+
+  ctx.body = posts
+}
+
 export async function updatePost(ctx) {
   const { id } = ctx.params
   const post = await ctx.api.post.update(id, ctx.request.body)
