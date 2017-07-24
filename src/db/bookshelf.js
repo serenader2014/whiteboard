@@ -161,7 +161,13 @@ blogBookshelf.Model = class Model extends blogBookshelf.Model {
       let data = null
 
       if (isRelatedData) {
-        data = this.related(key).get('id') ? this.related(key).json() : {}
+        if (typeof isRelatedData === 'string') {
+          const relatedData = this.related(isRelatedData)
+          const propertyToRead = option.property
+          data = relatedData[propertyToRead]
+        } else {
+          data = this.related(key).get('id') ? this.related(key).json() : {}
+        }
       } else {
         data = this.attributes[key]
       }

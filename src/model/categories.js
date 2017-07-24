@@ -30,6 +30,10 @@ export class Category extends bookshelf.Model {
   posts() {
     return this.hasMany(Post)
   }
+
+  count() {
+    return this.hasMany(Post).query({ where: { status: 'published' } })
+  }
 }
 
 export class Categories extends bookshelf.Collection {

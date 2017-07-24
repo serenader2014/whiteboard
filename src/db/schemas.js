@@ -99,5 +99,10 @@ export default {
     updated_by: { type: int, nullable: true },
     publish_at: { type: dateTime, nullable: true },
     publish_by: { type: int, nullable: true }
+  },
+  categories_count: {
+    id: { type: increments, nullable: false, primary: true },
+    category_id: { type: int, nullable: false },
+    post_id: { type: int, nullable: false }
   }
 }

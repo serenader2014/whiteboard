@@ -38,7 +38,7 @@ describe('category api test', () => {
       .get('/api/v1/categories')
       .end((err, res) => {
         if (err) throw err
-        res.body.length.should.equal(global.categories.length + 1)
+        res.body.data.length.should.equal(global.categories.length + 1)
         done()
       })
   })

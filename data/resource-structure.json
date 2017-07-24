@@ -32,7 +32,8 @@
     "created_at": {},
     "created_by": {},
     "updated_at": {},
-    "updated_by": {}
+    "updated_by": {},
+    "count": { "related_data": "count", "property": "length" }
   },
   "posts": {
     "id": {},

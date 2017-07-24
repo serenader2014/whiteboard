@@ -1,6 +1,6 @@
 import _ from 'lodash'
 
-import { Category, Categories } from '../model'
+import { Category } from '../model'
 import { canThis } from '../service/permission'
 import { OperationNotPermitted, RecordNotFound } from '../exceptions'
 
@@ -12,20 +12,20 @@ export async function create(requester, object) {
   return Category.create(_.pick(object, allowedField), requester)
 }
 
-export async function get(requester, id) {
+export async function get(requester, id, options = {}) {
   const isOperationPermitted = await canThis(requester, 'read', 'category')
   if (!isOperationPermitted) throw new OperationNotPermitted(`You dont have permission to read category`)
 
-  const category = await Category.query({ id })
+  const category = await Category.query({ id }, { withRelated: 'count' })
   if (!category) throw new RecordNotFound(`Can not find target category: ID: ${id}`)
 
   return category
 }
 
-export async function list(requester) {
+export async function list(requester, options) {
   const isOperationPermitted = await canThis(requester, 'read', 'category')
   if (!isOperationPermitted) throw new OperationNotPermitted(`You dont have permission to read category`)
-  return Categories.query({})
+  return Category.list(options)
 }
 
 export async function update(requester, id, options) {
